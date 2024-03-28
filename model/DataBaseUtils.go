@@ -28,7 +28,7 @@ func CreateDBFAQ() {
 	_, err := DB.Exec(`
 	CREATE TABLE IF NOT EXISTS FAQ (
 	    Id INTEGER PRIMARY KEY,
-	    CreatorUid TEXT,
+	    UID TEXT,
 		Question TEXT,
 		Description TEXT,
 		Date TEXT,
@@ -69,7 +69,7 @@ func CreateDBUser() {
 	    Id INTEGER PRIMARY KEY,
 		Uid TEXT UNIQUE NOT NULL,
 	    Pseudo TEXT NOT NULL,
-		Psswd TEXT NOT NULL,
+		psswrd TEXT NOT NULL,
 	    Email TEXT ,
 		Likes TEXT,
 		Nbpost INTEGER,
@@ -93,7 +93,7 @@ func CreateDBTopic() {
 	    Id INTEGER PRIMARY KEY,
 		Name TEXT,
 		Description TEXT,
-	    CreateurUID TEXT,
+	    UID TEXT,
 		NbAbo INTEGER,
 		NbPost INTEGER
 	)
@@ -103,15 +103,18 @@ func CreateDBTopic() {
 	}
 }
 
-func CreateDBNotif(){
-	_ ,err := DB.Exec(`
+func CreateDBNotif() {
+	_, err := DB.Exec(`
 	Create table if not exists Notifs(
 		Id INTEGER PRIMARY KEY,
 		UidWho TEXT,
 		Titre Text,
 		Message Text,
 		Date Text,
-		Signalement INTEGER
+		Signalement INTEGER,
+		Redirect TEXT,
+		Viewed INTEGER,
+		Image TEXT
 	)
 	`)
 	if err != nil {
@@ -136,8 +139,27 @@ func CreateDBPost() {
 	}
 }
 
-func CreateDBTags(){
-	_,err := DB.Exec(`
+func CreateDBCom() {
+	_, err := DB.Exec(`
+	CREATE TABLE IF NOT EXISTS Com (
+	    Comment_Id INTEGER PRIMARY KEY,
+		Uid TEXT,
+		Parent_Id INTEGER,
+		Name TEXT,
+		Content TEXT,
+		DATE TEXT,
+		IdTopic INTEGER,
+	    Image TEXT,
+		Likes INTEGER
+	)
+	`)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CreateDBTags() {
+	_, err := DB.Exec(`
 	CREATE TABLE IF NOT EXISTS Tags(
 		Id INTEGER PRIMARY KEY,
 		Name TEXT UNIQUE,

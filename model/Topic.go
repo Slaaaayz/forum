@@ -8,17 +8,18 @@ type Topic struct {
 	Id          int
 	Name        string
 	Description string
+	Uid         string
 	User        string
 	NbAbo       int
 	NbPost      int
-	Answer     []TPost
+	Answer      []TPost
 }
 
 // var Actualités_événements Topics
 // var Divertissement Topics
 // var Modebeauté Topics
 func AddTopic(name string, description string, creator string) {
-	stmt, err := DB.Prepare("INSERT INTO Topic(Name, Description, User, NbAbo, NbPost) VALUES(?, ?, ?, ?, ?)")
+	stmt, err := DB.Prepare("INSERT INTO Topic(Name, Description, Uid, NbAbo, NbPost) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err)
 	}

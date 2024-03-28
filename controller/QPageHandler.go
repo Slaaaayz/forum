@@ -36,6 +36,7 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		name = cookie.Value
 	}
+	id_page := strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1]
 
 	// requete http
 
@@ -63,14 +64,13 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				panic(err)
 			}
-			models.AddNotif("", "Message de "+models.GetUser(uid).Pseudo+" signalé", message, 1)
+			models.AddNotif("", "Message de "+models.GetUser(uid).Pseudo+" signalé", message, 1,"/faq/question/"+id_page,"")
 			// models.AddNbSignalement()
 		}
 	}
 
 	//requette http
 
-	id_page := strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1]
 	println("url :", r.URL.Path)
 	idquest, err := strconv.Atoi(id_page)
 	println("truc ", id_page)
@@ -109,20 +109,19 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		println("le uid :", uid)
+		println("the uid :", uid)
 		user := models.GetUser(uid)
-		APostdata.Id = id
+		APostdata.Comment_Id = id
 		APostdata.Date = date
 		APostdata.IdQuest = idquest
 		APostdata.Name = user.Pseudo
-		APostdata.Answer = message
+		APostdata.Content = message
 		APostdata.Image = image
-		APostdata.Pdp = user.Image
-		println("lapdp : ", APostdata.Pdp)
+		
 		APosts = append(APosts, APostdata)
 	}
 
-	rows, err = models.DB.Query("SELECT id, CreatorUid, question, description, date,Answer FROM faq WHERE Id = ?", id_page)
+	rows, err = models.DB.Query("SELECT id, UID, question, description, date,Answer FROM faq WHERE Id = ?", id_page)
 	if err != nil {
 		panic(err)
 	}

@@ -59,10 +59,10 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		println("t'envoie rien bg")
 		user := models.GetUser(name)
-		models.AddMessage(user.Uid,formattedTime, commentaire, idquest, "")
+		models.AddMessage(user.Uid, formattedTime, commentaire, idquest, "")
 		var uidcreator string
 		var TitreQuestion string
-		err = models.DB.QueryRow("SELECT CreatorUid FROM faq WHERE id = ?", id_page).Scan(&uidcreator)
+		err = models.DB.QueryRow("SELECT UID FROM faq WHERE id = ?", id_page).Scan(&uidcreator)
 		if err != nil {
 			panic(err)
 		}
@@ -71,7 +71,7 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		var Titre = "Nouveau Message sur votre question :" + TitreQuestion
-		models.AddNotif(uidcreator, Titre, commentaire,0)
+		models.AddNotif(uidcreator, Titre, commentaire, 0,"/faq/question/"+strconv.Itoa(idquest),user.Image)
 		models.AddNbNotif(uidcreator)
 		http.Redirect(w, r, "/faq/question/"+strconv.Itoa(idquest), http.StatusFound)
 		return
@@ -108,7 +108,7 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	models.AddMessage(user.Uid, formattedTime, commentaire, idquest, "/com_pics/"+strconv.Itoa(nextID)+extension)
 	var pseudocreator string
 	var TitreQuestion string
-	err = models.DB.QueryRow("SELECT pseudo FROM faq WHERE id = ?", id_page).Scan(&pseudocreator)
+	err = models.DB.QueryRow("SELECT CreatorUid FROM faq WHERE id = ?", id_page).Scan(&pseudocreator)
 	if err != nil {
 		panic(err)
 	}
@@ -117,7 +117,7 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	var Titre = "Nouveau Message sur votre question :" + TitreQuestion
-	models.AddNotif(pseudocreator, Titre, commentaire,0)
+	models.AddNotif(pseudocreator, Titre, commentaire, 0,"/faq/question/"+strconv.Itoa(idquest),user.Image)
 	models.AddNbNotif(pseudocreator)
 	// Redirection vers la page d'accueil
 	http.Redirect(w, r, "/faq/question/"+strconv.Itoa(idquest), http.StatusFound)

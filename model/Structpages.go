@@ -11,17 +11,19 @@ type FAQ_page struct {
 	UpPage      int
 }
 
-type Notif_page struct{
-	User User
-	Connect bool
-	Notifs []Notif
+type Notif_page struct {
+	User         User
+	Connect      bool
+	Notifs       []Notif
 	Signalements []Notif
 }
 
 type Search_Page struct {
-	User User
+	User    User
 	Connect bool
 	Search string
+	LesTags []Tags
+	LesQuestions TabQP
 	//tableau de q post et topic 
 }
 
@@ -32,6 +34,14 @@ type Topic_page struct {
 	Nbpage   int
 	Connect  bool
 	Pages    []int
+}
+
+type Post_page struct {
+	User    User
+	TPost   TPost
+	Nbpage  int
+	Connect bool
+	Pages   []int
 }
 
 type Login_page struct {

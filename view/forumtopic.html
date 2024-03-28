@@ -3,6 +3,7 @@
 <head>
     <title>Bamboo</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/forumtopic.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -26,15 +27,13 @@
         <div class="navbar2">
             <ul>
                 <li class="menu-deroulant">
-                    {{if not (eq .User.Nbnotif 0)}}
                     <div class="dot-notif">
                         <span class="badge"></span> 
                     </div>
-                    {{end}}
                     <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
                   <ul class="sous-menu">
                     <li><a href="/profile">Profil</a></li>
-                    <li><a href="/notif2">Notifications({{.User.Nbnotif}})</a></li>
+                    <li><a href="/notif2">Notifications({{.User.Nbnotifpasvu}})</a></li>
                     <li><a href="/deco">Se déconnecter</a></li>
                   </ul>
                 </li>
@@ -46,74 +45,59 @@
         {{end}}
 
     </header>
-
 <div class="container">
-    <div class="connection">
-        {{if .Connect}}
-        <h1>Bienvenue {{.User.Pseudo}}</h1>
-        {{else}}
-        <h1>Bienvenue sur Bamboo</h1>
-        {{end}}
+    <div class="addquestion">
+        <a href="/createtopic" class="lable"><div class="button"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon"><g stroke-width="1.5" stroke-linecap="round" stroke="#de8a2a"><circle r="7.5" cy="10" cx="10"></circle><path d="m9.99998 7.5v5"></path><path d="m7.5 9.99998h5"></path></g></svg>Créer un Topic</div></a>
     </div>
-    <div class="containerrecommande">
-        <div class="navbarfy">
-            <div class="pourvousused">
-                <a href="#">Pour vous </a>
+    <div class="container-faq">
+
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Lorem ipsum dolor sit amet.</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
             </div>
-            <div class="pourvous">
-                <a href="#">Abonnement</a>
+            <div class="toggle-pannel">
+                <h4>Lorem ipsum dolor sit amet.</h4>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem et asperiores, quod qui in ducimus rerum nisi dolorum. Optio, vel?</p>
             </div>
         </div>
-            <div class="containerquestion">
-                <div class="questionfy">
-                    <div class="lesquestions">
-                        <h3>Question 1</h3>
-                        <p>description de la question</p>
-                    </div>
-                    <div class="topicaccueil">
-                        <a href="#" class="btn btn-info">Voir topic</a>
-                    </div>
-                </div>
-                <div class="questionfy">
-                    <div class="lesquestions">
-                        <h3>Question 1</h3>
-                        <p>description de la question</p>
-                    </div>
-                    <div class="topicaccueil">
-                        <a href="#" class="btn btn-info">Voir topic</a>
-                    </div>
-                </div>
-                <div class="questionfy">
-                    <div class="lesquestions">
-                        <h3>Question 1</h3>
-                        <p>description de la question</p>
-                    </div>
-                    <div class="topicaccueil">
-                        <a href="#" class="btn btn-info">Voir topic</a>
-                    </div>
-                </div>
-                <div class="questionfy">
-                    <div class="lesquestions">
-                        <h3>Question 1</h3>
-                        <p>description de la question</p>
-                    </div>
-                    <div class="topicaccueil">
-                        <a href="#" class="btn btn-info">Voir topic</a>
-                    </div>
-                </div>
-                <div class="questionfy">
-                    <div class="lesquestions">
-                        <h3>Question 1</h3>
-                        <p>description de la question</p>
-                    </div>
-                    <div class="topicaccueil">
-                        <a href="#" class="btn btn-info">Voir topic</a>
-                    </div>
-                </div>
+
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Lorem ipsum dolor sit amet.</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
+            </div>
+            <div class="toggle-pannel">
+                <h4>Lorem ipsum dolor sit amet.</h4>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus neque et, excepturi sequi laboriosam at sit exercitationem repellat voluptate aliquam? Officiis inventore quibusdam doloremque amet quidem dolor quod praesentium in, ullam tenetur corrupti ducimus commodi, minima, nam maiores temporibus assumenda necessitatibus natus voluptas! Mollitia distinctio consequuntur eos aut voluptatibus pariatur?</p>
             </div>
         </div>
+
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Lorem ipsum dolor sit amet.</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
+            </div>
+            <div class="toggle-pannel">
+                <h4>Lorem ipsum dolor sit amet.</h4>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis, est!</p>
+            </div>
+        </div>
+
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Lorem ipsum dolor sit amet.</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
+            </div>
+            <div class="toggle-pannel">
+                <h4>Lorem ipsum dolor sit amet.</h4>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Obcaecati iusto soluta sunt quos ex, quidem a. Perferendis non corporis dolore reiciendis corrupti temporibus voluptatum veniam aperiam nemo cumque fugit atque facere eius veritatis facilis, qui vero libero, molestias optio fuga labore, similique sint. Tempora enim, eum quia, repellendus rerum repellat quae quas error reprehenderit dolorum est nesciunt ducimus provident tenetur!</p>
+            </div>
+        </div>
+
     </div>
-</div>
+
+
     <footer class="footer">
         <div class="container2">
             <div class="row">
@@ -146,6 +130,7 @@
             </div>
         </div>
    </footer>
-   <script src="/assets/js/animationaccueil.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
+   <script src="/assets/js/forumtopic.js"></script>
    </body>
 </html>

@@ -3,6 +3,7 @@ package controllers
 import (
 	models "forum/model"
 	"net/http"
+	"strconv"
 	"text/template"
 )
 
@@ -20,6 +21,9 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		name = ""
 		connected = false
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+
 	} else {
 		name = cookie.Value
 	}
@@ -27,7 +31,7 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 	var TabSignalements []models.Notif
 	//get user
 	if user.Admin == 1 {
-		rows, err := models.DB.Query("SELECT id, UidWho, titre, message, date FROM notifs WHERE signalement = 1")
+		rows, err := models.DB.Query("SELECT id, UidWho, titre, message, date,redirect,viewed ,image FROM notifs WHERE signalement = 1")
 		if err != nil {
 			panic(err)
 		}
@@ -40,7 +44,10 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 			var titre string
 			var message string
 			var date string
-			err := rows.Scan(&id, &pseudo, &titre, &message, &date)
+			var redirect string
+			var view int
+			var image string
+			err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view,&image)
 			if err != nil {
 				panic(err)
 			}
@@ -50,10 +57,13 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 			ExtractSignalements.Titre = titre
 			ExtractSignalements.Message = message
 			ExtractSignalements.Pseudo = pseudo
+			ExtractSignalements.Redirect = redirect
+			ExtractSignalements.View = view
+			ExtractSignalements.Image = image
 			TabSignalements = append(TabSignalements, ExtractSignalements)
 		}
 	}
-	rows, err := models.DB.Query("SELECT id, UidWho, titre, message, date FROM notifs WHERE UidWho = ?", user.Uid)
+	rows, err := models.DB.Query("SELECT id, UidWho, titre, message, date,redirect,viewed,image FROM notifs WHERE UidWho = ?", user.Uid)
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +76,10 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 		var titre string
 		var message string
 		var date string
-		err := rows.Scan(&id, &pseudo, &titre, &message, &date)
+		var redirect string
+		var view int
+		var image string
+		err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view,&image)
 		if err != nil {
 			panic(err)
 		}
@@ -76,16 +89,36 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 		ExtractNotif.Titre = titre
 		ExtractNotif.Message = message
 		ExtractNotif.Pseudo = pseudo
+		ExtractNotif.Redirect = redirect
+		ExtractNotif.View = view
+		ExtractNotif.Image = image
 		TabNotif = append(TabNotif, ExtractNotif)
 	}
+	reset := r.FormValue("reset")
+	goo := r.FormValue("go")
+	println("reset : ", reset)
+	println("goo : ", goo)
+	if reset == "reset" {
+		models.ResetNbNotif(name)
+		http.Redirect(w, r, "/notif", http.StatusSeeOther)
 
+	}
+	if goo != "" {
+		notif, _ := strconv.Atoi(goo)
+		models.View(notif, name)
+		lanotif := strconv.Itoa(notif)
+		var redirect string
+		err = models.DB.QueryRow("SELECT redirect FROM notifs WHERE id = ?", lanotif).Scan(&redirect)
+		http.Redirect(w, r, redirect, http.StatusSeeOther)
+
+	}
 	lapage := models.Notif_page{
 		User:         user,
 		Connect:      connected,
 		Notifs:       TabNotif,
 		Signalements: TabSignalements,
 	}
-	models.ResetNbNotif(user.Uid)
+
 	err = tmpl.Execute(w, lapage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -55,7 +54,6 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			TPextra.Image = image
 			TPextra.Likes = likes
 			TPextra.Post = post
-			println(post)
 
 			Textra.Answer = append(Textra.Answer, TPextra)
 		}
@@ -65,7 +63,7 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		defer db.Close()
-		rows, err = db.Query("SELECT id, Name, Description, User, NbAbo, NbPost FROM Topic WHERE Id = ?", id_page)
+		rows, err = db.Query("SELECT id, Name, Description, Uid, NbAbo, NbPost FROM Topic WHERE Id = ?", id_page)
 		if err != nil {
 			panic(err)
 		}
@@ -74,10 +72,10 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			var id int
 			var name string
 			var description string
-			var user string
+			var uid string
 			var NbAbo int
 			var NbPost int
-			err := rows.Scan(&id, &name, &description, &user, &NbAbo, &NbPost)
+			err := rows.Scan(&id, &name, &description, &uid, &NbAbo, &NbPost)
 			if err != nil {
 				panic(err)
 			}
@@ -85,12 +83,11 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			Textra.Id = id
 			Textra.Name = name
 			Textra.Description = description
-			Textra.User = user
 			Textra.NbAbo = NbAbo
 			Textra.NbPost = NbPost
 			nbpost++
 		}
-		fmt.Println(Textra)
+		
 
 		lapage := models.Topic_page{
 			User:    user,

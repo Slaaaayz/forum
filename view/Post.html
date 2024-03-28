@@ -10,7 +10,7 @@
     <body>
     <header class="header">
         <div class="name">
-            <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+            <a href="/"><img src="/assets/img/image.blancpng.png  " alt="Bambou">
             <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
         </div>
         <nav class="navbar">
@@ -26,9 +26,6 @@
         <div class="navbar2">
             <ul>
                 <li class="menu-deroulant">
-                    <div class="dot-notif">
-                        <span class="badge"></span> 
-                    </div>
                     <a href="" class="MainButtonpdp"><img class="pdp"src="/{{.User.Image}}"></a>
                   <ul class="sous-menu">
                     <li><a href="/profile">Profil</a></li>
@@ -43,16 +40,18 @@
         </div>
         {{end}}
 
-    </header>
-   
+    </header>   
     <div class="container">
-        <a href="/forum/TPost/{{.Nbpage}}" class="button">Ajouter un Post</a>
         <div class="Title">
-            {{.Topic.Name}}
-            {{range .Topic.Answer}}
-            <a href="/forum/topic/post/{{.Id}}" class="button"> {{.Post}} </a>
-            <h2> {{.Image}} </h2>
-            <h2> {{.Date}} </h2>
+            {{if .TPost}}
+            <h2>{{.TPost.Post}}</h2>
+            <h4>{{.TPost.Name}}</h4>
+            {{.TPost.Date}}
+            {{range .TPost.Answers}}
+            <h5>{{.Name}}</h5>
+            {{.Date}}
+            {{.Content}}
+            {{end}}
             {{end}}
         </div>
         <div>

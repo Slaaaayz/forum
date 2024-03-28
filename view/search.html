@@ -31,7 +31,7 @@
                     <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
                   <ul class="sous-menu">
                     <li><a href="/profile">Profil</a></li>
-                    <li><a href="/notif">Notifications ({{.User.Nbnotifpasvu}})</a></li>
+                    <li><a href="/notif">Notifications ({{.User.Nbnotif}})</a></li>
                     <li><a href="/deco">Se déconnecter</a></li>
                   </ul>
                 </li>
@@ -44,8 +44,16 @@
 
     </header>
     <div class="container">
-        <h1>search</h1>
+        <h1>la recherche :</h1>
         <h2>{{.Search}}</h2>
+        <h2>Tags :</h2>
+        {{range .LesTags}}
+        <p>tag : {{.Name}}</p>
+        {{end}}
+        <h2>Posts</h2>
+        {{range .LesQuestions.TabQP}}
+        <p>postquestion : {{.Question}}</p>
+        {{end}}
     </div>
     
     <footer class="footer">

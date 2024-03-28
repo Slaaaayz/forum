@@ -31,7 +31,7 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		defer db.Close()
-		rows, err := db.Query("SELECT id, CreatorUid, question, description,Date ,Answer date FROM faq")
+		rows, err := db.Query("SELECT id, UID, question, description,Date ,Answer date FROM faq")
 		if err != nil {
 			panic(err)
 		}
@@ -67,6 +67,7 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 		if nbpost%10 != 0 {
 			nb_page++
 		}
+		println("kakou", id_page, nb_page)
 		if nbpost != 0 {
 			if id_page == nb_page {
 				QPostsdata.TabQP = QPostsdata.TabQP[id_page*10-10:]

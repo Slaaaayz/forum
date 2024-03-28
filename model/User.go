@@ -9,19 +9,19 @@ import (
 
 type User struct {
 	Id       int
-	Uid string
+	Uid      string
 	Pseudo   string
 	Password string
 	Email    string
 	Image    string
 	Bio      string
 	Post     int
-	Admin int
-	Nbnotifpasvu int
+	Admin    int
+	Nbnotif  int
 }
 
 func GetUser(uid string) User {
-	rows, err := DB.Query("SELECT id, pseudo, mdp, email, Image, Bio, nbpost, admin FROM users WHERE uid = ?", uid)
+	rows, err := DB.Query("SELECT id, pseudo, psswrd, email, Image, Bio, nbpost, admin,NbNotifsPasvu FROM users WHERE uid = ?", uid)
 	if err != nil {
 		panic(err)
 	}
@@ -33,10 +33,10 @@ func GetUser(uid string) User {
 	var bio string
 	var nbpost int
 	var admin int
-	var nbnotifpasvu int
+	var nbnotif int
 	// defer rows.Close()
 	for rows.Next() {
-		err := rows.Scan(&id, &pseudo, &psswrd, &email, &image, &bio, &nbpost, &admin)
+		err := rows.Scan(&id, &pseudo, &psswrd, &email, &image, &bio, &nbpost, &admin, &nbnotif)
 		if err != nil {
 			panic(err)
 		}
@@ -49,17 +49,16 @@ func GetUser(uid string) User {
 		Image:    image,
 		Bio:      bio,
 		Post:     nbpost,
-		Uid: uid,
-		Admin: admin,
-		Nbnotifpasvu: nbnotifpasvu,
-		
+		Uid:      uid,
+		Admin:    admin,
+		Nbnotif:  nbnotif,
 	}
 	return user
 
 }
 
 func GetMail(lemail string) User {
-	rows, err := DB.Query("SELECT id, pseudo, mdp, email, Image, Bio, nbpost FROM users WHERE email = ?", lemail)
+	rows, err := DB.Query("SELECT id, pseudo, psswrd, email, Image, Bio, nbpost FROM users WHERE email = ?", lemail)
 	if err != nil {
 		panic(err)
 	}
@@ -98,12 +97,12 @@ func AddUser(id int, pseudo string, email string, psswrd string, gmail int, face
 	for i := 0; i < 16; i++ {
 		uid += string(charset[seededRand.Intn(len(charset))])
 	}
-	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswrd, likes, nbpost, Bio, Image, gmail, facebook, github, admin) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswrd, likes, nbpost, Bio, Image, gmail, facebook, github, admin,NbNotifsPasvu) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)")
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(uid, pseudo, email, psswrd, "", 0, "", "../assets/img/basepdp.png", gmail ,facebook , github, 0)
+	_, err = stmt.Exec(uid, pseudo, email, psswrd, "", 0, "", "../assets/img/basepdp.png", gmail, facebook, github, 0, 0)
 	if err != nil {
 		panic(err)
 	}
@@ -144,7 +143,7 @@ func AccountMail(Email string) (bool, string, string) {
 	}
 	return false, "", "oui"
 }
-func Getuid(Pseudo string)string{
+func Getuid(Pseudo string) string {
 	rows, err := DB.Query("SELECT uid FROM users WHERE pseudo = ?", Pseudo)
 	if err != nil {
 		panic(err)

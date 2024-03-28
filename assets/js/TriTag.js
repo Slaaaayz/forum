@@ -69,7 +69,7 @@ function Submittag(){
 
 
 
-function autocompleteFunction(input) {
+function autocompleteFunction(input,wich) {
     var autocompleteList = document.getElementById("autocomplete-list");
     var options = autocompleteList.options;
 
@@ -77,14 +77,17 @@ function autocompleteFunction(input) {
         autocompleteList.style.display = "block";
         options.length = 0;
         console.log(tags)
+        var nboption = 0 
         for(var i = 0 ; i < tags.length;i++){
             console.log("tag name : ",tags[i].Name)
             console.log(input.value)
             if (tags[i].Name.includes(input.value)){
                 var option = new Option(tags[i].Name+"("+tags[i].NbUsed+")",tags[i].Name);
                 options.add(option);
+                nboption++
             }
         }
+        autocompleteList.size = nboption
     } else {
         autocompleteList.style.display = "none";
     }

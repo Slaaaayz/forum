@@ -78,7 +78,8 @@ func CreateFAQHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			QPostdata.Question = EntryQ
 			QPostdata.Description = EntryD
-			models.AddQuestion(name, QPostdata.Question, QPostdata.Description, formattedTime, tags)
+			tagstab := [5]string{Tag1,Tag2,Tag3,Tag4,Tag5}
+			models.AddQuestion(name, QPostdata.Question, QPostdata.Description, formattedTime, tagstab)
 			http.Redirect(w,r,"/faq/1",http.StatusSeeOther)
 		}
 	} else {

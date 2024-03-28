@@ -21,15 +21,16 @@ type TabQP struct {
 }
 
 type APost struct {
-	Id      int
-	Name    string
-	Pdp     string
-	Answer  string
-	Date    string
-	IdQuest int
-	IdTopic int
-	Image   string
-	Likes   int
+	Comment_Id int
+	Uid        string
+	Parent_Id  int
+	Name       string
+	Content    string
+	Date       string
+	IdQuest    int
+	IdTopic    int
+	Image      string
+	Likes      int
 	// Check  bool
 	// Likes  int
 }
@@ -44,20 +45,20 @@ type TPost struct {
 	Answers []APost
 }
 
-func AddQuestion(uid string, question string, description string, date string, tags string) {
-	stmt, err := DB.Prepare("INSERT INTO FAQ(CreatorUid, Question, Description, Date, Answer) VALUES(?, ?, ?, ?, ?)")
+func AddQuestion(uid string, question string, description string, date string, tags [5]string) {
+	stmt, err := DB.Prepare("INSERT INTO FAQ(uid, Question, Description, Date, Answer, tags1ID,tags2ID,tags3ID,tags4ID,tags5ID) VALUES(?, ?, ?, ?, ?, ?, ?,?,?,?)")
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(uid, question, description, date, 0)
+	_, err = stmt.Exec(uid, question, description, date, 0,tags[0],tags[1],tags[2],tags[3],tags[4])
 	if err != nil {
 		panic(err)
 	}
 }
 
 func AddPost(name string, post string, date string, idtopic int, image string, likes int) {
-	stmt, err := DB.Prepare("INSERT INTO Post(Name, Post, Date, IdTopic, Image, Likes) VALUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := DB.Prepare("INSERT INTO Post(Name, Post, Date, IdTopic, Image, Likes) VALUES( ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err)
 	}

@@ -36,7 +36,6 @@ func TPostHandler(w http.ResponseWriter, r *http.Request) {
 
 		if name != "" {
 			if Post != "" {
-				print(Post)
 				models.AddPost(name, Post, formattedTime, id_page, image, 0)
 				http.Redirect(w, r, "/forum/topic/"+strconv.Itoa(id_page), http.StatusSeeOther)
 			}

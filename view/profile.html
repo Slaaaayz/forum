@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bamboo</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+    <body>
+    <header class="header">
+        <div class="name">
+            <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+            <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
+        </div>
+        <nav class="navbar">
+            <a href="/">Accueil</a>
+            <a href="/forum/1">Forum</a>
+            <a href="/faq/1">FAQ</a>
+        </nav>
+        <form action="" class="search-bar">
+            <input type="text" placeholder="Search...">
+            <button><i class='bx bx-search'></i></button>
+        </form>
+        {{if .Connect}}        
+        <div class="navbar2">
+            <ul>
+                <li class="menu-deroulant">
+                    <div class="dot-notif">
+                        <span class="badge"></span> 
+                    </div>
+                    <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
+                  <ul class="sous-menu">
+                    <li><a href="/profile">Profil</a></li>
+                    <li><a href="/notif">Notifications</a></li>
+                    <li><a href="/deco">Se déconnecter</a></li>
+                  </ul>
+                </li>
+        </div>
+        {{else}}
+        <div class="navbar2">
+            <a href="/login" class="MainButton">Se connecter</a>
+        </div>
+        {{end}}
+
+    </header>
+    <main>
+        <div class="leprofile">
+            <div class="lapp">
+                <img class="pdpprofile"src="{{.User.Image}}">
+            </div>
+            <div class="lesinfos1">
+                <p class="lepseudo">{{.User.Pseudo}}</p>
+                <p class="labio">{{.User.Bio}}<p>
+            </div>
+        </div>
+        <div class="para">
+            <div class="souspara">
+                <h1>Changer son pseudo :</h1>
+                <div>
+                    <form action="/profile" method="post" class="postpseudo">
+                        <div class="pseudocontour">
+                        <input class="changepseudo"type="text" placeholder="Entrez le pseudo" maxlength="15" name="changepseudo">
+                        </div>
+                        <input class="btn btn-info" type="submit">
+                    </form>
+                </div>
+                <a>{{.MessageChangePseudo}}</a>
+                <h1>Changer sa biographie :</h1>
+                <div>
+                    <form action="/profile" method="post" class="postpseudo">
+                        <textarea class="bio"name="bio" rows="4" maxlength="200" placeholder="Entrez votre Biographie"></textarea>
+                        <input class="btn btn-info" type="submit">
+                    </form>
+                </div>
+                <h1>Changer sa photo de profil</h1>
+                <div>
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <label class="custom-file-upload">
+                        <input type="file" name="file" />
+                        <a>Selectionnez une photo</a>
+                    </label>
+                    <!-- <input class="btn btn-info" type="file" name="file" />-->
+                    <input class="btn btn-info" type="submit" />
+                </form>
+                </div>
+                </div>
+        </div>
+
+
+    </main>
+</body>
+</html>

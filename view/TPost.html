@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bamboo</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="name">
+            <a href="/"><img src="/assets/img/image.blancpng.png" alt="Bambou">
+            <a href="/" class="logo">Bᴀᴍʙᴏᴏ
+        </div>
+        <nav class="navbar">
+            <a href="/">Accueil</a>
+            <a href="/forum/1">Forum</a>
+            <a href="/faq/1">FAQ</a>
+        </nav>
+        <form action="" class="search-bar">
+            <input type="text" placeholder="Search...">
+            <button><i class='bx bx-search'></i></button>
+        </form>
+        {{if .Connect}}
+        <div class="navbar2">
+            <a href="/profile"class="MainButtonpdp"><img class="pdp"src="/{{.User.Image}}"></a>
+        </div>
+        {{else}}
+        <div class="navbar2">
+            <a href="/login" class="MainButton">Se connecter</a>
+        </div>
+        {{end}}
+    </header>
+
+    <div class="containerQuestion">
+        <h2>Ajouter une question</h2>
+        <form id="myForm">
+            <label for="textInput1">Image :</label>
+            <input type="text" id="textInput1" name="Image" placeholder="Entrez votre question" required>
+            <label for="textInput2">Post :</label>
+            <textarea id="textInput2" name="Post" rows="4" placeholder="Que voulez-vous racconter aujourd'hui"></textarea>
+            <div class="tags">
+                <input type="text" name="tag1"placeholder="tag" class="tag" id="tag1">
+                <input type="text" name="tag2"placeholder="tag" class="tag" id="tag2">
+                <input type="text" name="tag3"placeholder="tag" class="tag" id="tag3">
+                <input type="text" name="tag4"placeholder="tag" class="tag" id="tag4">
+                <input type="text" name="tag5"placeholder="tag" class="tag" id="tag5">
+                <button type="button" id="submittag" onclick="Submittag()">+</button>
+            </div>
+            <a href="/forum/topic/{{.Nbpage}}"><button type="submit">Soumettre</button></a>
+            <a href="/forum/topic/{{.Nbpage}}"><button type="button" class="btn-back" >Retour</button></a>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <div class="container2">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>About US</h4>
+                    <ul>
+                        <li><a href="#"></a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                        <li><a href="#">affiliate program</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">forum</a></li>
+                        <li><a href="#">contact us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </footer>
+   <script src="../assets/js/addTag.js"></script>
+</body>
+</html>

@@ -15,7 +15,7 @@ func OpenDateBase() {
 }
 
 func DeleteDB() {
-	_, err := DB.Exec("DELETE FROM post ") //le nom de la table a la place de completer
+	_, err := DB.Exec("DELETE FROM  ") //le nom de la table a la place de completer
 	if err != nil {
 		fmt.Println("Erreur lors de l'exécution de la requête DELETE:", err)
 		return
@@ -69,9 +69,9 @@ func CreateDBUser() {
 	    Id INTEGER PRIMARY KEY,
 		Uid TEXT UNIQUE NOT NULL,
 	    Pseudo TEXT NOT NULL,
-		psswrd TEXT NOT NULL,
+		psswd TEXT NOT NULL,
 	    Email TEXT ,
-		Likes TEXT,
+		Likes INTEGER,
 		Nbpost INTEGER,
 		Bio TEXT,
 		Image TEXT,
@@ -79,7 +79,8 @@ func CreateDBUser() {
 	    Facebook INTEGER,
 		Github INTEGER,
 		Admin INTEGER,
-		NbNotifsPasvu INTEGER
+		NbNotifs  INTEGER,
+		BP INTEGER
 	)
 	`)
 	if err != nil {
@@ -95,7 +96,8 @@ func CreateDBTopic() {
 		Description TEXT,
 	    UID TEXT,
 		NbAbo INTEGER,
-		NbPost INTEGER
+		NbPost INTEGER,
+		Categorie INTEGER
 	)
 	`)
 	if err != nil {
@@ -131,7 +133,12 @@ func CreateDBPost() {
 		DATE TEXT,
 		IdTopic INTEGER,
 	    Image TEXT,
-		Likes INTEGER
+		Likes INTEGER,
+		Tags1ID INTEGER,
+		Tags2ID INTEGER,
+		Tags3ID INTEGER,
+		Tags4ID INTEGER,
+		Tags5ID INTEGER
 	)
 	`)
 	if err != nil {
@@ -149,8 +156,8 @@ func CreateDBCom() {
 		Content TEXT,
 		DATE TEXT,
 		IdTopic INTEGER,
-	    Image TEXT,
-		Likes INTEGER
+		Post_Id,
+	    Image TEXT
 	)
 	`)
 	if err != nil {
@@ -164,6 +171,33 @@ func CreateDBTags() {
 		Id INTEGER PRIMARY KEY,
 		Name TEXT UNIQUE,
 		NbUsed INT
+	)
+	`)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CreateDBLikes(){
+	_,err := DB.Exec(`
+	CREATE TABLE IF NOT EXISTS Likes(
+		Id INTEGER PRIMARY KEY,
+		Uid TEXT,
+		IdPost INTEGER,
+		IdComment INTEGER
+	)
+	`)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CreateDbAbo(){
+	_,err := DB.Exec(`
+	CREATE TABLE IF NOT EXISTS Abo(
+		Id INTEGER PRIMARY KEY,
+		Uid TEXT,
+		idTopic INTEGER
 	)
 	`)
 	if err != nil {

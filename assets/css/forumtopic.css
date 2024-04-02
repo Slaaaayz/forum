@@ -26,7 +26,7 @@ h1 {
 .questions {
     width: 100%;
     height: auto;
-    margin: 5px;
+    margin-bottom: 30px;
 }
 .visible-pannel {
     display: flex;
@@ -35,7 +35,6 @@ h1 {
     background: #f1f1f1;
     border-radius: 10px;
     position: relative;
-    z-index: 100;
 }
 .visible-pannel h2 {
     margin-left: 10px;
@@ -51,11 +50,43 @@ h1 {
     padding: 0px 15px;
     height: 0px;
     opacity: 0;
+    background-color: #fff;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
 }
+
 .toggle-pannel h4 {
     font-size: 18px;
     padding-bottom: 10px;
 }
 .toggle-pannel p {
     line-height: 1.5;
+}
+
+
+.view {
+    align-self: flex-start;
+    text-align: right;
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 25px;
+}
+
+#kakou{
+    width: 150px;
+}
+
+.both-pannel{
+    display: flex;
+    margin-bottom: 30px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.style-pannel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Bamboo</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -10,7 +10,7 @@
     <body>
     <header class="header">
         <div class="name">
-            <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+            <a href="/"><img src="/assets/img/image.blancpng.png  " alt="Bambou">
             <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
         </div>
         <nav class="navbar">
@@ -26,7 +26,7 @@
         <div class="navbar2">
             <ul>
                 <li class="menu-deroulant">
-                    <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
+                    <a href="" class="MainButtonpdp"><img class="pdp"src="/{{.User.Image}}"></a>
                   <ul class="sous-menu">
                     <li><a href="/profile">Profil</a></li>
                     <li><a href="/notif">Notifications</a></li>
@@ -39,56 +39,55 @@
             <a href="/login" class="MainButton">Se connecter</a>
         </div>
         {{end}}
-
     </header>
     <div class="container">
-        <div class="cardnotif">
-        {{if eq .User.Admin 1}}
-        <div class="sections">
-            <div id="notifs" class="section_notif">
-            <button  onclick="showNotif()">
-                Notifications
-            </button>
-            </div>
-            <div id="signalements" class="section_signalement">
-            <button  onclick="showSignalement()">
-                Signalements
-            </button>
-            </div>
-        </div>
-        {{end}}
-        {{if not .Notifs}}
-        <h1>Pas de notifs</h1>
-        {{end}}
-        <div id="notifs"class="notifs">
-            {{range .Notifs}}
-                <div>
-                    <div>
-                        <h2>{{.Titre}}</h2><a><em>{{.Date}}</em></a>
-                    </div>
-                    <p>{{.Message}}</p>
+        <div class="Title">
+            {{if .TPost}}
+            <h2>{{.TPost.Post}}</h2>
+            <form action="" method="post" enctype="multipart/form-data">
+                <textarea name="Answer" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
+                <div class="quoicoucrampte">
+                <div class="both"> 
+                    <input type="submit" class="submit">
+                    <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
                 </div>
-            {{end}}
-        </div>
-        <div id="signalements"class="signalements" style="display: none;">
-            {{if not .Notifs}}
-            <h1>Pas de signalements</h1>
-            {{end}}
-            {{range .Signalements}}
-                <div>
-                    <div>
-                        <h2>{{.Titre}}</h2><a><em>{{.Date}}</em></a>
-                    </div>
-                    <p>{{.Message}}</p>
+                <input type="submit" value=""class="submitAnnuler" onclick="displayText()">
                 </div>
+            </form>
+            <h4>{{.TPost.Name}}</h4>
+            <h3>{{.TPost.Date}}</h3>
+            {{range .TPost.Answers}}
+            <h2><a href="/forum/topic/post/answer/{{.Comment_Id}}">{{.Content}}</a></h2>
+            <form action="" method="post" enctype="multipart/form-data">
+                <textarea name="Reply" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
+                <div class="quoicoucrampte">
+                    <div class="both"> 
+                        <input type="submit" class="submit">
+                        <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
+                    </div>
+                    <input type="submit" value=""class="submitAnnuler" onclick="displayText()">
+                </div>
+            </form>
+            {{if gt .Parent_Id 0}}
+            {{if eq .Parent_Id .Comment_Id}}
+            {{.Name}}
+            {{.Content}}
+            <form action="" method="post" enctype="multipart/form-data">
+                <textarea name="Answer" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
+                <div class="quoicoucrampte">
+                    <div class="both"> 
+                       <input type="submit" class="submit">
+                        <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
+                    </div>
+                    <input type="submit" value=""class="submitAnnuler" onclick="displayText()">
+                </div>
+            </form>
+            {{end}}
+            {{end}}
+            {{end}}
             {{end}}
         </div>
     </div>
-    </div>
-
-
-
-
     <footer class="footer">
         <div class="container2">
             <div class="row">
@@ -121,6 +120,5 @@
             </div>
         </div>
    </footer>
-   <script src="/assets/js/notifs.js"></script>
-   </body>
+</body>
 </html>

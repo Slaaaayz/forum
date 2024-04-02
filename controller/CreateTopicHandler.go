@@ -3,6 +3,8 @@ package controllers
 import (
 	models "forum/model"
 	"net/http"
+	"strconv"
+	"strings"
 	"text/template"
 )
 
@@ -10,6 +12,15 @@ func CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
 
 	EntryQ := r.FormValue("Question")
 	EntryD := r.FormValue("Description")
+	if strings.Contains(EntryQ, "</") {
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
+	if strings.Contains(EntryD, "</") {
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
+	EntryC, _ := strconv.Atoi(r.FormValue("categories"))
 	var QPostdata models.QPost
 	var QPostsdata models.TabQP
 	cookie, err := r.Cookie("pseudo_user")
@@ -27,7 +38,8 @@ func CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
 
 			QPostdata.Question = EntryQ
 			QPostdata.Description = EntryD
-			models.AddTopic(EntryQ, EntryD, name)
+			models.AddTopic(EntryQ, EntryD, name, EntryC)
+			http.Redirect(w, r, "/forum", http.StatusSeeOther)
 		}
 	} else {
 		connected = false

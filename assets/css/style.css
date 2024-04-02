@@ -246,9 +246,15 @@ main{
 ul{
 	list-style: none;
 }
+
+.footerbottom{
+    position: relative;
+}
 .footer{
 	background-color: #24262b;
     padding: 70px 0;
+    bottom: 0px;
+
 }
 .footer-col{
    width: 25%;
@@ -580,14 +586,12 @@ textarea:focus {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: auto;
+    margin: 20px;
     overflow: hidden;
-}
-
-.commentaires {
-
+    margin-left: 10px;
+    flex-direction: column;
 }
 
 .Profil {
@@ -617,7 +621,6 @@ textarea:focus {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    margin-bottom: 30x; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 200px;
     overflow: hidden;
@@ -644,7 +647,7 @@ textarea:focus {
 }
 
 .writemsg {
-    padding: 20px;
+    padding: 5px;
     background-color: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -659,7 +662,8 @@ textarea:focus {
     justify-content: center;
     align-items: center;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     width: auto;
 
 
@@ -809,7 +813,7 @@ textarea:focus {
     z-index: 1000;
     position: absolute;
     background-color: #fff;
-    height: 50px;
+    /* height: 50px; */
 }
 
 .tag{
@@ -863,13 +867,15 @@ textarea:focus {
     align-items: center 
 }
 .postpseudo{
-display: flex;
-align-items: center;
-align-content: center;
+    display: flex;
+    align-items: center;
+    align-content: center;
 }
+
 input[type="file"] {
     display: none;
 }
+
 .custom-file-upload {
     border: 2px solid #17a2b8;
     display: inline-block;
@@ -888,14 +894,17 @@ input[type="file"] {
     resize: none;
     font-size: 16px;
 }
+
 .para{
     width: 100%;
 }
+
 .souspara{
     margin-top: 20px;
     align-items: center;
     align-content: center;
 }
+
 .labio{
     font-size: 25px;
     margin-bottom: 20px;
@@ -903,8 +912,6 @@ input[type="file"] {
     text-align: center;
 }
 
-
-/* Page */
 .cd__main{
     position: relative;
    min-height: 640px;
@@ -914,7 +921,6 @@ input[type="file"] {
     align-items: end;
     flex-direction: column;
 }
-
 
 .container3dots{
     margin-right: 20px;
@@ -932,6 +938,7 @@ input[type="file"] {
     line-height: normal;
     overflow: visible;
     -webkit-user-select: none;
+    user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     width: 100%;
@@ -1112,6 +1119,7 @@ input[type="file"] {
     width: 200px;
     overflow: hidden;
     height: auto;
+    cursor: pointer;
 }
 
 .pourvousused {
@@ -1124,6 +1132,7 @@ input[type="file"] {
     width: 200px;
     overflow: hidden;
     height: auto;
+    cursor: pointer;
 }
 
 .pourvousused a::after {
@@ -1425,6 +1434,7 @@ li a {
     color: gray;
     cursor: pointer;
     transition: 0.6 ease;
+    font-size: 13.333px;
 }
   
 #show-signalement:hover {
@@ -1452,4 +1462,88 @@ li a {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.notif-btn {
+    border: 0px;
+    background-color: #f9f9f9;
+    flex-direction: column;
+    display: flex;
+    text-align: left;
+    cursor: pointer;
+}
+
+#notif-time {
+    color: gray;
+    font-size: 13.333px;
+}
+
+.description p {
+    /* font-size: 13.333px; */
+    margin-top: 3px;
+    text-align: left;
+}
+
+.description img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.notificationCardread img{
+    width: 50px;
+}
+
+.notificationCardread {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1rem;
+
+}
+
+.notif-all-read {
+    border: 0px;
+    background-color: #fff;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.form-group select{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.endedit {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#delfaq{
+    background-color: red;
+}
+
+#delfaq:hover{
+    background-color: #B81717;
+    transition: none;
+}
+
+.contenu{
+    width: 90%;
+    margin-top: 20px;
 }

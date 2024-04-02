@@ -13,6 +13,10 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	search := r.FormValue("search")
+	if strings.Contains(search, "</") {
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
 	cookie, err := r.Cookie("pseudo_user")
 	var value string
 	if err != nil {
@@ -33,45 +37,14 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 			lesbontags = append(lesbontags, tags[i])
 		}
 	}
-	rows, err := models.DB.Query("SELECT id, UID, question, description,Date ,Answer date FROM faq")
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-	var QPostsdata models.TabQP
-	var ExtractQP models.QPost
-	for rows.Next() {
-		var id int
-		var uid string
-		var question string
-		var description string
-		var date string
-		var repondu int
-		err := rows.Scan(&id, &uid, &question, &description, &date, &repondu)
-		if err != nil {
-			panic(err)
-		}
-		println(question)
-		if strings.Contains(strings.ToLower(question), strings.ToLower(search)) {
-			println("prout")
-			ExtractQP.Id = id
-			ExtractQP.Date = date
-			ExtractQP.Question = question
-			ExtractQP.Description = description
-			ExtractQP.Name = models.GetUser(uid).Pseudo
-			ExtractQP.Resolved = repondu
-			QPostsdata.TabQP = append(QPostsdata.TabQP, ExtractQP)
-		}
-	}
 
 	lapage := models.Search_Page{
 		User:         user,
 		Connect:      connected,
 		Search:       search,
-		LesTags:      lesbontags,
-		LesQuestions: QPostsdata,
+		LesQuestions: models.GetFaqByName(search),
+		LesTopics:    models.GetTopicByName(search),
 	}
-
 	err = tmpl.Execute(w, lapage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

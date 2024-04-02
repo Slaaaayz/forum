@@ -1,16 +1,15 @@
 package models
 
-import (
-	"strconv"
-)
+import "strings"
 
 type QPost struct {
-	Id          int
-	Name        string
+	Id   int
+	Name string
+
 	Question    string
 	Description string
 	Date        string
-	Answer      []APost
+	Answer      []AQuestion
 	Resolved    int
 	Tags        string
 	// Likes       int
@@ -29,11 +28,24 @@ type APost struct {
 	Date       string
 	IdQuest    int
 	IdTopic    int
+	Post_id    int
 	Image      string
 	Likes      int
 	// Check  bool
 	// Likes  int
 }
+
+type AQuestion struct {
+	Id        int
+	IdUser    int
+	IdQuesion int
+	Name      string
+	Pdp       string
+	Date      string
+	Content   string
+	Image     string
+}
+
 type TPost struct {
 	Id      int
 	Name    string
@@ -42,38 +54,59 @@ type TPost struct {
 	Image   string
 	Post    string
 	Likes   int
+	IsLiked bool	
+
 	Answers []APost
+	Tags []string
+	Pdp string
+	IdUser int
 }
 
 func AddQuestion(uid string, question string, description string, date string, tags [5]string) {
-	stmt, err := DB.Prepare("INSERT INTO FAQ(uid, Question, Description, Date, Answer, tags1ID,tags2ID,tags3ID,tags4ID,tags5ID) VALUES(?, ?, ?, ?, ?, ?, ?,?,?,?)")
+	stmt, err := DB.Prepare("INSERT INTO FAQ(Uid, Question, Description, Date, Answer, tags1ID,tags2ID,tags3ID,tags4ID,tags5ID) VALUES(?, ?, ?, ?, ?, ?, ?,?,?,?)")
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(uid, question, description, date, 0,tags[0],tags[1],tags[2],tags[3],tags[4])
+	_, err = stmt.Exec(uid, question, description, date, 0, tags[0], tags[1], tags[2], tags[3], tags[4])
 	if err != nil {
 		panic(err)
 	}
 }
 
-func AddPost(name string, post string, date string, idtopic int, image string, likes int) {
-	stmt, err := DB.Prepare("INSERT INTO Post(Name, Post, Date, IdTopic, Image, Likes) VALUES( ?, ?, ?, ?, ?, ?)")
+func AddPost(name string, post string, date string, idtopic int, image string, likes int, tags [5]string) {
+	stmt, err := DB.Prepare("INSERT INTO Post(Name, Post, Date, IdTopic, Image, Likes, tags1ID,tags2ID,tags3ID,tags4ID,tags5ID) VALUES( ?, ?, ?, ?, ?, ?,?,?,?,?,?)")
 	if err != nil {
 		panic(err)
 	}
+	AddBP(name)
 	defer stmt.Close()
-	_, err = stmt.Exec(name, post, date, idtopic, image, likes)
+	_, err = stmt.Exec(name, post, date, idtopic, image, likes, tags[0], tags[1], tags[2], tags[3], tags[4])
 	if err != nil {
 		panic(err)
 	}
 }
 
-func AddLike(idUser int, idPost int) {
-	var likes string
-	err := DB.QueryRow("SELECT likes FROM users WHERE id = ?", idUser).Scan(&likes)
-	setlikes := likes + "|" + strconv.Itoa(idPost)
-	_, err = DB.Exec("UPDATE users SET likes = ? WHERE id = ?", setlikes, idUser)
+func AddNbPost(uid string) {
+	_, err := DB.Exec("UPDATE users SET NbPost = NbPost + 1 WHERE uid = ?", uid)
+	if err != nil {
+		panic(err)
+	}
+}
+func AddCom(uid string, parent_Id int, content string, date string, idtopic int, post_id int, image string) { //, likes int) {
+	stmt, err := DB.Prepare("INSERT INTO Com(Uid, Parent_Id, Content, Date, IdTopic, Post_Id, Image) VALUES( ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(uid, parent_Id, content, date, idtopic, post_id, image)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func AddNbLikes(uid string) {
+	_, err := DB.Exec("UPDATE users SET Likes = Likes + 1 WHERE uid = ?", uid)
 	if err != nil {
 		panic(err)
 	}
@@ -84,6 +117,7 @@ func AddMessage(useruid string, date string, message string, IDquest int, image 
 	if err != nil {
 		panic(err)
 	}
+	AddBP(useruid)
 	defer stmt.Close()
 	_, err = stmt.Exec(useruid, date, message, IDquest, image)
 	if err != nil {
@@ -91,15 +125,73 @@ func AddMessage(useruid string, date string, message string, IDquest int, image 
 	}
 }
 
-func AddTag(leTag string, postID int) {
-	var lestags string
-	err := DB.QueryRow("SELECT COALESCE(tags,) FROM faq WHERE id = ?", postID).Scan(&lestags)
+func AddLikesPost(Uid string, Postid int) {
+	stmt, err := DB.Prepare("INSERT INTO Likes(Uid, idpost, IdComment) VALUES( ?, ?, ?)")
 	if err != nil {
 		panic(err)
 	}
-	lestags = lestags + "|" + leTag
-	_, err = DB.Exec("UPDATE FAQ SET tags = 1 WHERE Id = ? ", lestags)
+	defer stmt.Close()
+	_, err = stmt.Exec(Uid, Postid, 0)
 	if err != nil {
 		panic(err)
 	}
+}
+func RemoveLikes(Uid string, Postid int) {
+	_, err := DB.Exec("DELETE from likes where uid = ? and idpost = ?", Uid, Postid)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func AddLikesComm(Uid string, CommId int) {
+	stmt, err := DB.Prepare("INSERT INTO Likes(Uid, Postid, IdCommen) VALUES( ?, ?, ?)")
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(Uid, 0, CommId)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func IsLiked(Uid string, IdLike int) bool {
+	var exists bool
+	err := DB.QueryRow("SELECT EXISTS(SELECT 1 FROM likes WHERE uid = ? and id = ?)", Uid, IdLike).Scan(&exists)
+	if err != nil {
+		panic(err)
+	}
+	return exists
+}
+
+func GetFaqByName(search string) TabQP{
+	rows, err := DB.Query("SELECT id, Uid, question, description,Date ,Answer date FROM faq")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	var QPostsdata TabQP
+	var ExtractQP QPost
+	for rows.Next() {
+		var id int
+		var uid string
+		var question string
+		var description string
+		var date string
+		var repondu int
+		err := rows.Scan(&id, &uid, &question, &description, &date, &repondu)
+		if err != nil {
+			panic(err)
+		}
+		if strings.Contains(strings.ToLower(question), strings.ToLower(search)) {
+			ExtractQP.Id = id
+			ExtractQP.Date = date
+			ExtractQP.Question = question
+			ExtractQP.Description = description
+			ExtractQP.Name = GetUser(uid).Pseudo
+			ExtractQP.Resolved = repondu
+			QPostsdata.TabQP = append(QPostsdata.TabQP, ExtractQP)
+		}
+	}
+	return QPostsdata
 }

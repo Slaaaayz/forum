@@ -9,44 +9,61 @@
 <body>
     <header class="header">
         <div class="name">
-            <a href="/"><img src="/assets/img/image.blancpng.png" alt="Bambou">
-            <a href="/" class="logo">Bᴀᴍʙᴏᴏ
+            <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+            <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
         </div>
         <nav class="navbar">
             <a href="/">Accueil</a>
-            <a href="/forum/1">Forum</a>
+            <a href="/forum">Forum</a>
             <a href="/faq/1">FAQ</a>
         </nav>
-        <form action="" class="search-bar">
-            <input type="text" placeholder="Search...">
-            <button><i class='bx bx-search'></i></button>
+        <form action="/search" method="post"class="search-bar">
+            <input name="search"type="text" placeholder="Search...">
+            <button type="submit"><i class='bx bx-search'></i></button>
         </form>
-        {{if .Connect}}
+        {{if .Connect}}        
         <div class="navbar2">
-            <a href="/profile"class="MainButtonpdp"><img class="pdp"src="/{{.User.Image}}"></a>
+            <ul>
+                <li class="menu-deroulant">
+                    {{if not (eq .User.Nbnotif 0)}}
+                    <div class="dot-notif">
+                        <span class="badge"></span> 
+                    </div>
+                    {{end}}
+                    <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
+                  <ul class="sous-menu">
+                    <li><a href="/profile">Profil</a></li>
+                    <li><a href="/notif">Notifications({{.User.Nbnotif}})</a></li>
+                    <li><a href="/deco">Se déconnecter</a></li>
+                  </ul>
+                </li>
         </div>
         {{else}}
         <div class="navbar2">
             <a href="/login" class="MainButton">Se connecter</a>
         </div>
         {{end}}
+
     </header>
 
     <div class="containerQuestion">
         <h2>Ajouter une question</h2>
-        <form id="myForm">
-            <label for="textInput1">Image :</label>
-            <input type="text" id="textInput1" name="Image" placeholder="Entrez votre question">
+        <form id="myForm" method="post" enctype="multipart/form-data">
+            <!-- <label for="textInput1">Image :</label>
+            <input type="text" id="textInput1" name="Image" placeholder="Entrez votre question"> -->
             <label for="textInput2">Post :</label>
             <textarea id="textInput2" name="Post" rows="4" placeholder="Que voulez-vous racconter aujourd'hui"></textarea>
             <div class="tags">
-                <input type="text" name="tag1"placeholder="tag" class="tag" id="tag1">
-                <input type="text" name="tag2"placeholder="tag" class="tag" id="tag2">
-                <input type="text" name="tag3"placeholder="tag" class="tag" id="tag3">
-                <input type="text" name="tag4"placeholder="tag" class="tag" id="tag4">
-                <input type="text" name="tag5"placeholder="tag" class="tag" id="tag5">
+                <input type="text" autocomplete="off" name="tag1"placeholder="tag" class="myInput" id="tag1" onkeyup="autocompleteFunction(this,1)">
+                <input type="text" autocomplete="off" name="tag2"placeholder="tag" class="myInput" id="tag2" onkeyup="autocompleteFunction(this,2)">
+                <input type="text" autocomplete="off" name="tag3"placeholder="tag" class="myInput" id="tag3" onkeyup="autocompleteFunction(this,3)">
+                <input type="text" autocomplete="off" name="tag4"placeholder="tag" class="myInput" id="tag4" onkeyup="autocompleteFunction(this,4)">
+                <input type="text" autocomplete="off" name="tag5"placeholder="tag" class="myInput" id="tag5" onkeyup="autocompleteFunction(this,5)">
+                <select id="autocomplete-list" size="5" onclick="selectOption()">
+                </select>
                 <button type="button" id="submittag" onclick="Submittag()">+</button>
             </div>
+            <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
             <a href="/forum/topic/{{.Nbpage}}"><button type="submit">Soumettre</button></a>
             <a href="/forum/topic/{{.Nbpage}}"><button type="button" class="btn-back" >Retour</button></a>
         </form>
@@ -84,6 +101,6 @@
             </div>
         </div>
    </footer>
-   <script src="../assets/js/addTag.js"></script>
+   <script src="/assets/js/TriTag.js"></script>
 </body>
 </html>

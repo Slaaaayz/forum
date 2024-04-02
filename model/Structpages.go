@@ -22,14 +22,21 @@ type Search_Page struct {
 	User    User
 	Connect bool
 	Search string
-	LesTags []Tags
 	LesQuestions TabQP
+	LesTopics []Topic
+	RandomPost []TPost
 	//tableau de q post et topic 
+}
+
+type VP_page struct {
+	User     User
+	Connect  bool
+	UserView User
 }
 
 type Topic_page struct {
 	User     User
-	TabTopic TabCat
+	Categories Categories
 	Topic    Topic
 	Nbpage   int
 	Connect  bool
@@ -52,6 +59,8 @@ type Login_page struct {
 type Home_page struct {
 	User    User
 	Connect bool
+	FYPage []TPost
+	AboPage []TPost
 }
 type FAQ_Q_page struct {
 	User    User
@@ -71,4 +80,10 @@ type Q_page struct {
 	Connect bool
 	// Pages   []int
 	APosts []APost
+}
+
+type Likes_page struct{
+	User User
+	Connect bool
+	Post []TPost
 }

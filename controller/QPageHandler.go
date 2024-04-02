@@ -19,17 +19,26 @@ type Data struct {
 }
 
 func QPageHandler(w http.ResponseWriter, r *http.Request) {
-	EntryA := r.FormValue("commentaire")
-	if EntryA != "" {
-		println("le commentaire :", EntryA)
+
+	id_page1, _ := strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
+	var maxID int
+	err := models.DB.QueryRow("SELECT MAX(id) FROM faq").Scan(&maxID)
+	if err != nil {
+		panic(err)
 	}
-	var APostdata models.APost
+	if maxID < id_page1{
+		NotFound(w, r, http.StatusNotFound)
+		return
+	}
+
+	EntryA := r.FormValue("commentaire")
+	var APostdata models.AQuestion
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("15:04 02/01/2006")
 	cookie, err := r.Cookie("pseudo_user")
 	connected := true
 	var name string
-	var APosts []models.APost
+	var APosts []models.AQuestion
 
 	if err != nil {
 		name = ""
@@ -48,6 +57,10 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println("Données reçues :", data.Id, data.Mess)
 		if data.Type == "edit" {
+			if strings.Contains(data.Mess, "</"){
+				http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+				return
+			}
 			_, err := models.DB.Exec("UPDATE Answer SET message = ? WHERE Id = ? ", data.Mess, data.Id)
 			if err != nil {
 				panic(err)
@@ -64,7 +77,7 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				panic(err)
 			}
-			models.AddNotif("", "Message de "+models.GetUser(uid).Pseudo+" signalé", message, 1,"/faq/question/"+id_page,"")
+			models.AddNotif("", "Message de "+models.GetUser(uid).Pseudo+" signalé", message, 1,"/faq/question/"+id_page,models.GetUser(name).Image)
 			// models.AddNbSignalement()
 		}
 	}
@@ -73,7 +86,6 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 
 	println("url :", r.URL.Path)
 	idquest, err := strconv.Atoi(id_page)
-	println("truc ", id_page)
 	if err != nil {
 		fmt.Println("Erreur lors de la conversion:", err)
 		return
@@ -82,6 +94,7 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 	if name != "" {
 		if EntryA != "" {
 			models.AddMessage(name, formattedTime, EntryA, idquest, "")
+			models.AddNbPost(name)
 		}
 	} else {
 		connected = false
@@ -109,14 +122,16 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		println("the uid :", uid)
 		user := models.GetUser(uid)
-		APostdata.Comment_Id = id
+		APostdata.Id = id
 		APostdata.Date = date
-		APostdata.IdQuest = idquest
+		APostdata.IdQuesion = idquest
 		APostdata.Name = user.Pseudo
 		APostdata.Content = message
 		APostdata.Image = image
+		APostdata.Pdp = user.Image
+		APostdata.IdUser = user.Id
+
 		
 		APosts = append(APosts, APostdata)
 	}

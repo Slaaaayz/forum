@@ -6,6 +6,7 @@ import (
 	models "forum/model"
 	"net/http"
 	"regexp"
+	"strings"
 	"text/template"
 )
 
@@ -24,8 +25,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	passreghash := sha256.Sum256([]byte(password_register))
 	passloghash := sha256.Sum256([]byte(password_login))
 	if pseudo_login != "" && password_login != "" {
-		existaccount, psswrd, _ := models.ExistAccount(pseudo_login)
-		if existaccount && psswrd == hex.EncodeToString((passloghash[:])) {
+		if strings.Contains(pseudo_login, "</") {
+			http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+			return
+		}
+		existaccount, psswd, _ := models.ExistAccount(pseudo_login)
+		if existaccount && psswd == hex.EncodeToString((passloghash[:])) {
 			println("connexion reussi")
 			uid := models.Getuid(pseudo_login)
 			http.SetCookie(w, &http.Cookie{
@@ -43,6 +48,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if pseudo_register != "" && password_register != "" {
+		if strings.Contains(pseudo_register, "</") {
+			http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+			return
+		}
 		match, _ := regexp.MatchString(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, email_register)
 		if !match {
 			println("email invalide")

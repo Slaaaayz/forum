@@ -15,7 +15,7 @@
             </div>
             <nav class="navbar">
                 <a href="/">Accueil</a>
-                <a href="/forum/1">Forum</a>
+                <a href="/forum">Forum</a>
                 <a href="/faq/1">FAQ</a>
             </nav>
             <form action="/search" method="post"class="search-bar">
@@ -52,31 +52,54 @@
             <div class="headerNotif">
                 <div class="notificationHeader" >
                     <h1 onclick="showNotif()">Notification</h1>
-                    <span id="num-of-notif"></span>
                 </div>
-                <p id="show-signalement" onclick="showSignalement()">Signalement</p>
+                {{if eq .User.Admin 1}}
+                <div class="notificationHeader" >
+                    <p id="show-signalement" onclick="showSignalement()">Signalement</p>
+                </div>
+                {{end}}
                 <form action="/notif" method="post">
-                    <button name="reset" value="reset" id="mark-as-read"><p>Mark as All Read</p></button>
+                    <button class="notif-all-read" name="reset" value="reset" id="mark-as-read"><p>Mark as All Read</p></button>
                 </form>
             </div>
             <main class="main">
-                {{range .Notifs}}
-                <!-- class="notificationCard unread" -->
-                {{if eq .View 1}}
-                <div >
-                {{else}}
-                <div class="notificationCard unread">
-                {{end}}
-                    <img alt="photo" src="{{.Image}}">
-                    <div class="description NotifNotifNotifNotif">
-                        <form action="/notif" method="post">
-                            <button name="go" value="{{.Id}}">{{.Titre}}</button>
-                        </form>
-                        <p>{{.Message}}</p>
-                        <p id="notif-time">{{.Date}}</p>
+                <div id="notifs">
+                    {{range .Notifs}}
+                    <!-- class="notificationCard unread" -->
+                    {{if eq .View 1}}
+                    <div class="notificationCardread">
+                    {{else}}
+                    <div class="notificationCard unread">
+                    {{end}}
+                        <img alt="photo" src="{{.Image}}">
+                        <div class="description NotifNotifNotifNotif">
+                            <form action="/notif" method="post">
+                                <button class="notif-btn" name="go" value="{{.Id}}">{{.Titre}} <p>{{.Message}}</p></button>
+                            </form>
+                            
+                            <p id="notif-time">{{.Date}}</p>
+                        </div>
                     </div>
+                    {{end}}
                 </div>
-                {{end}}
+                <div id="signalements"class="signalements" style="display: none;">
+                    {{if not .Signalements}}
+                    <h1>Pas de signalements</h1>
+                    {{end}}
+                    {{range .Signalements}}
+                    <div class="notificationCard read">
+                        <img alt="photo" src="{{.Image}}">
+                        <div class="description NotifNotifNotifNotif">
+                            <form action="/notif" method="post">
+                                <button class="notif-btn" name="go" value="{{.Id}}">{{.Titre}}</button>
+                            </form>
+                            <p>{{.Message}}</p>
+                            <p id="notif-time">{{.Date}}</p>
+                        </div>
+
+                    </div>
+                    {{end}}
+                </div>
             </main>
         </div>
     </div>

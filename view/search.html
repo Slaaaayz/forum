@@ -1,10 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Bamboo</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/forumtopic.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -17,7 +16,7 @@
         </div>
         <nav class="navbar">
             <a href="/">Accueil</a>
-            <a href="/forum/1">Forum</a>
+            <a href="/forum">Forum</a>
             <a href="/faq/1">FAQ</a>
         </nav>
         <form action="/search" method="post"class="search-bar">
@@ -43,17 +42,59 @@
         {{end}}
 
     </header>
+
+
     <div class="container">
-        <h1>la recherche :</h1>
-        <h2>{{.Search}}</h2>
-        <h2>Tags :</h2>
-        {{range .LesTags}}
-        <p>tag : {{.Name}}</p>
-        {{end}}
-        <h2>Posts</h2>
-        {{range .LesQuestions.TabQP}}
-        <p>postquestion : {{.Question}}</p>
-        {{end}}
+        <div class="connection">
+            <h2>Votre Recherche :</h2>
+        </div>
+        <div class="connection">
+            <p>{{.Search}}</p>
+        </div>
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Questions</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
+            </div>
+            <div class="toggle-pannel">
+                {{range .LesQuestions.TabQP}}
+                <div class="both-pannel">            
+                    <div class="style-pannel">
+                    <h4>{{.Question}}</h4>
+                    <p>{{.Description}}<p>
+                    </div>
+                    <div class="view">
+                        {{if eq $.User.Admin 1}}
+                        <a href="/delfaq/{{.Id}}" name="delete" value="del" class="btn btn-info" id="delfaq" >Supprimer Topic</a>
+                        {{end}}
+                        <a href="/faq/question/{{.Id}}" id="kakou"class="btn btn-info">Voir topic</a>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        <div class="questions">
+            <div class="visible-pannel">
+                <h2>Topics</h2>
+                <img src="../assets/img/+.png" alt="croix animation">
+            </div>
+            <div class="toggle-pannel">
+                {{range .LesTopics}}
+                <div class="both-pannel">            
+                    <div class="style-pannel">
+                    <h4>{{.Name}}</h4>
+                    <p>{{.Description}}<p>
+                    </div>
+                    <div class="view">
+                        {{if eq $.User.Admin 1}}
+                        <a href="/deltopic/{{.Id}}" name="delete" value="del" class="btn btn-info" id="delfaq" >Supprimer Topic</a>
+                        {{end}}
+                        <a href="/forum/topic/{{.Id}}" id="kakou"class="btn btn-info">Voir topic</a>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
     </div>
     
     <footer class="footer">
@@ -89,5 +130,7 @@
         </div>
    </footer>
    <script src="/assets/js/animationaccueil.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
+   <script src="/assets/js/forumtopic.js"></script>
    </body>
 </html>

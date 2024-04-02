@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bamboo</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/qforum.css">
+    <link rel="stylesheet" href="/assets/css/delete.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/alltopic.css">
+</head>
+    <body>
+        <header class="header">
+            <div class="name">
+                <a href="/"><img src="/assets/img/image.blancpng.png  " alt="Bambou">
+                <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
+            </div>
+            <nav class="navbar">
+                <a href="/">Accueil</a>
+                <a href="/forum">Forum</a>
+                <a href="/faq/1">FAQ</a>
+            </nav>
+            <form action="/search" method="post"class="search-bar">
+                <input name="search"type="text" placeholder="Search...">
+                <button type="submit"><i class='bx bx-search'></i></button>
+            </form>
+            {{if .Connect}}        
+            <div class="navbar2">
+                <ul>
+                    <li class="menu-deroulant">
+                        {{if not (eq .User.Nbnotif 0)}}
+                        <div class="dot-notif">
+                            <span class="badge"></span> 
+                        </div>
+                        {{end}}
+                        <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
+                      <ul class="sous-menu">
+                        <li><a href="/profile">Profil</a></li>
+                        <li><a href="/notif">Notifications({{.User.Nbnotif}})</a></li>
+                        <li><a href="/deco">Se déconnecter</a></li>
+                      </ul>
+                    </li>
+            </div>
+            {{else}}
+            <div class="navbar2">
+                <a href="/login" class="MainButton">Se connecter</a>
+            </div>
+            {{end}}
+    
+        </header>
+        <input type="hidden" id="getid" value="">
+        <div id="delete-modal" class="modal">
+            <div  class="card">
+                <div class="card-content">
+                  <p class="card-heading">Voulez vous vraiment supprimer le commentaire ?</p>
+                  <p class="card-description">Cette action sera irréversible , et le commentaire sera effacé pour tout les utilisateurs</p>
+                </div>
+                <div class="card-button-wrapper">
+                  <button id="cancel-delete" class="card-button secondary">Annuler</button>
+                  <button id="confirm-delete" class="card-button primary">Supprimer</button>
+                </div>
+                <button id="lacroix"class="exit-button">
+                  <svg height="20px" viewBox="0 0 384 512">
+                    <path
+                      class="lacroix"d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+<div class="container">
+    <div class="forum">
+        <div class="forum-topic-reel">
+            <div class="forum-topic-title">
+                <h1>{{.Topic.Name}}</h1>
+                <p>{{.Topic.Description}}</p>
+                {{if .Connect}}
+                {{if not .Topic.IsAbo}}
+                <div id="abobutton"class="AboV" onclick="Abo(this)" ><button id="follow-button"><p>S'abonner</p></button></div>
+                <div id="abobutton"class="AboR" onclick="Desabo(this)" style="display: none;"><button id="follow-button"><p>Abonné</p></button></div>
+                {{else}}
+                <div id="abobutton"class="AboV" onclick="Abo(this)" style="display: none;"><button id="follow-button"><p>S'abonner</p></button></div>
+                <div id="abobutton"class="AboR" onclick="Desabo(this)" ><button id="follow-button"><p>Abonné</p></button></div>
+                {{end}}
+                {{else}}
+                <button id="follow-button"><a href="/login">+ S'abonner</a></button>	
+                {{end}}
+            </div>
+        </div>
+        {{range .Topic.Answer}}
+        <div class="allTopic">
+        <div class="forum-topic-info-profil">
+            <div class="both-profil">
+            <a href="/ViewProfil/{{.IdUser}}"><img src="{{.Pdp}}" alt="pdp"></a>
+            <div class="both-topic">
+                <h2>{{.Name}}</h2>
+                <p>{{.Date}}</p>
+            </div>
+            </div>
+            <div>
+                <button onclick="Endedit(this)" style="display: none;" value="{{.Id}}"class="endedit"id="endedit">Valider</button>
+            </div>
+            <div class="container3dots">
+                <div class="more" onclick="showMenu(this)" value="test">
+                    <button id="more-btn" class="more-btn" >
+                        <span class="more-dot"></span>
+                        <span class="more-dot"></span>
+                        <span class="more-dot"></span>
+                    </button>
+                    <div class="more-menu">
+                        <div class="more-menu-caret">
+                            <div class="more-menu-caret-outer"></div>
+                            <div class="more-menu-caret-inner"></div>
+                        </div>
+                        <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
+                            <li class="more-menu-item" role="presentation">
+                                <button type="button" class="more-menu-btn" onclick="Copy(this)" role="menuitem">Copier</button>
+                            </li>
+                            {{if or (eq .Name $.User.Pseudo) (eq $.User.Admin 1)}}
+                            <li class="more-menu-item" role="presentation">
+                                <button type="button" class="more-menu-btn" onclick="Edit(this)"role="menuitem">Editer</button>
+                            </li>
+                            
+                            <li class="more-menu-item" role="presentation">
+                                <button id="boutondel"type="button" value="{{.Id}}" onclick="Delete(this)"  class="more-menu-btn" role="menuitem">Supprimer</button>
+                            </li>
+                            {{end}}
+                            <li class="more-menu-item" role="presentation">
+                                <button type="button" value="{{.Id}}" onclick="Signaler(this)"class="more-menu-btn" role="menuitem">Signaler</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="forum-topic-content">
+            <a href="/forum/topic/post/{{.Id}}"><p class="lepost">{{.Post}}</p></a>
+            {{if .Image}}
+            <a href="{{.IdUser}}"><img src="{{.Image}}" alt="test"></a>
+            {{end}}
+        </div>
+        <div class="forum-topic-info-content">
+            <div class="forum-topic-info-content-likes-n-comments">
+                <p id="nblike{{.Id}}">{{.Likes}}</p><p style="margin-left: 3px;">likes · 12 comments</p>
+            </div>
+            <div class="forum-topic-info-icon-like-n-comment">
+                {{if $.Connect}}
+                {{if .IsLiked}}
+                <div class="coeurV" onclick="Like(this)" data-value={{.Id}} style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412l7.332 7.332c.17.299.498.492.875.492a.99.99 0 0 0 .792-.409l7.415-7.415c2.354-2.354 2.354-6.049-.002-8.416a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595zm6.791 1.61c1.563 1.571 1.564 4.025.002 5.588L12 18.586l-6.793-6.793c-1.562-1.563-1.561-4.017-.002-5.584.76-.756 1.754-1.172 2.799-1.172s2.035.416 2.789 1.17l.5.5a.999.999 0 0 0 1.414 0l.5-.5c1.512-1.509 4.074-1.505 5.584-.002z"></path></svg></div>
+                <div class="coeurR" onclick="UnLike(this)" data-value={{.Id}}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 0, 0, 1);"><path d="M20.205 4.791a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412L12 21.414l8.207-8.207c2.354-2.353 2.355-6.049-.002-8.416z"></path></svg></div>
+                {{else}}
+                <div class="coeurV" onclick="Like(this)" data-value={{.Id}}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412l7.332 7.332c.17.299.498.492.875.492a.99.99 0 0 0 .792-.409l7.415-7.415c2.354-2.354 2.354-6.049-.002-8.416a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595zm6.791 1.61c1.563 1.571 1.564 4.025.002 5.588L12 18.586l-6.793-6.793c-1.562-1.563-1.561-4.017-.002-5.584.76-.756 1.754-1.172 2.799-1.172s2.035.416 2.789 1.17l.5.5a.999.999 0 0 0 1.414 0l.5-.5c1.512-1.509 4.074-1.505 5.584-.002z"></path></svg></div>
+                <div class="coeurR" onclick="UnLike(this)" data-value={{.Id}} style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 0, 0, 1);"><path d="M20.205 4.791a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412L12 21.414l8.207-8.207c2.354-2.353 2.355-6.049-.002-8.416z"></path></svg></div>
+                {{end}}
+                {{else}}
+                <a href="/login">
+                    <div class="coeurV" onclick="Like(this)" data-value={{.Id}}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412l7.332 7.332c.17.299.498.492.875.492a.99.99 0 0 0 .792-.409l7.415-7.415c2.354-2.354 2.354-6.049-.002-8.416a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595zm6.791 1.61c1.563 1.571 1.564 4.025.002 5.588L12 18.586l-6.793-6.793c-1.562-1.563-1.561-4.017-.002-5.584.76-.756 1.754-1.172 2.799-1.172s2.035.416 2.789 1.17l.5.5a.999.999 0 0 0 1.414 0l.5-.5c1.512-1.509 4.074-1.505 5.584-.002z"></path></svg></div>
+                </a>
+                {{end}}
+                <button class="btn-add-comment"><i class='bx bx-comment'></i></button>
+            </div>
+        </div>
+        </div>
+        {{end}}  
+
+            <div class="writemsg"> 
+                <div class="placeh2msg">
+                    {{if .Connect}}
+                    <a href="/forum/TPost/{{.Nbpage}}">
+                    {{else}}
+                    <a href="/login">
+                    {{end}}
+                        <button  type="buttonquestion" class="buttonquestion">
+                        <span class="button__text">Ajouter un post</span>
+                        <span class="button__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg">
+                                <line y2="19" y1="5" x2="12" x1="12"></line>
+                                <line y2="12" y1="12" x2="19" x1="5"></line>
+                            </svg>
+                        </span>
+                    </button></a>
+                </div>
+            </div>
+    </div>
+</div>
+    <footer class="footer">
+        <div class="container2">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>About US</h4>
+                    <ul>
+                        <li><a href="#"></a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                        <li><a href="#">affiliate program</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">forum</a></li>
+                        <li><a href="#">contact us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</footer>
+</div>
+<script src="/assets/js/moreTopic.js"></script>
+<script src="/assets/js/addquestion.js"></script>
+<script src="/assets/js/like.js"></script>
+<script src="/assets/js/deleteTopic.js"></script>
+<script src="/assets/js/follow.js"></script>
+</body>
+</html>

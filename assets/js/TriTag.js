@@ -10,7 +10,7 @@ fetch('/createFAQ', {
       tags = data
       tags.sort(compareByNbUsed);
     })
-    .catch(error => console.error('Erreur lors de la récupération des tags:', error));
+    .catch(error => tags="");
   
 var tag1 = document.getElementById("tag1")
 var tag2 = document.getElementById("tag2")
@@ -24,19 +24,13 @@ function compareByNbUsed(tag1, tag2) {
 
 var IndexTag = 1
     
-    
-window.addEventListener("load", function(){
-        console.log("chargement")
-        tag2.style.display="none"
-        tag3.style.display="none"
-        tag4.style.display="none"
-        tag5.style.display="none"
-    });
-    
+tag2.style.display="none"
+tag3.style.display="none"
+tag4.style.display="none"
+tag5.style.display="none"
 function Submittag(){
         switch(IndexTag){
             case 1:
-                console.log("tag1",tag1.value)
                 if(tag1.value!=""){
                 tag2.style.display="block"
                 IndexTag++
@@ -76,23 +70,29 @@ function autocompleteFunction(input,wich) {
     if (input.value.length > 0) {
         autocompleteList.style.display = "block";
         options.length = 0;
-        console.log(tags)
         var nboption = 0 
         for(var i = 0 ; i < tags.length;i++){
-            console.log("tag name : ",tags[i].Name)
-            console.log(input.value)
             if (tags[i].Name.includes(input.value)){
                 var option = new Option(tags[i].Name+"("+tags[i].NbUsed+")",tags[i].Name);
                 options.add(option);
                 nboption++
             }
         }
-        autocompleteList.size = nboption
+        if (nboption == 0) {
+            autocompleteList.style.display = "none";
+        }else if (nboption == 1){
+            autocompleteList.size = 2
+            
+        }else {
+            autocompleteList.size = nboption
+        }
+ 
     } else {
         autocompleteList.style.display = "none";
     }
 }
 function selectOption() {
+console.log("kakou")
   var input = document.getElementsByClassName("myInput")[IndexTag-1];
   console.log("input : ",input)
   console.log("index : ",IndexTag)

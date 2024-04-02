@@ -11,12 +11,12 @@
     <body>
         <header class="header">
             <div class="name">
-                <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+                <a href="/"><img src="/assets/img/image.blancpng.png  " alt="Bambou">
                 <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
             </div>
             <nav class="navbar">
                 <a href="/">Accueil</a>
-                <a href="/forum/1">Forum</a>
+                <a href="/forum">Forum</a>
                 <a href="/faq/1">FAQ</a>
             </nav>
             <form action="/search" method="post"class="search-bar">
@@ -97,18 +97,18 @@
                 </div>
 
                 <div class="commentaires">
-                    {{range .QPost.Content}}
+                    {{range .QPost.Answer}}
                     <div class="Profil">
                         <div class="seeprofil">
+                            <a href="/ViewProfil/{{.IdUser}}"><img class="pdpcom"src="{{.Pdp}}"></a>
                             
-                            <img class="pdpcom"src="{{.Pdp}}">
                             <p>{{.Name}}</p>
                             <p><em style="font-size: small;" class="date">{{.Date}}</em></p>
                         </div>
                         <div class="pute">
                             <div class="tarpinPute">
                                 <div>
-                                    <button onclick="Endedit(this)" style="display: none;" value="{{.Id}}"class="endedit"id="endedit">v</button>
+                                    <button onclick="Endedit(this)" style="display: none;" value="{{.Id}}"class="endedit"id="endedit">Valider</button>
                                 </div>
                             <div class="container3dots">
                                 <div class="more" onclick="showMenu(this)" value="test">
@@ -178,7 +178,7 @@
                                 <textarea name="commentaire" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
                                 <div class="quoicoucrampte">
                                 <div class="both"> 
-                                    <input type="submit" class="submit" >
+                                    <input type="submit" class="submit">
                                     <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
                                 </div>
                                 <input type="submit" value="Annuler"class="submitAnnuler" onclick="displayText()">

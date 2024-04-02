@@ -15,28 +15,32 @@ type User struct {
 	Email    string
 	Image    string
 	Bio      string
+	Likes    int
 	Post     int
 	Admin    int
 	Nbnotif  int
+	BP       int
 }
 
 func GetUser(uid string) User {
-	rows, err := DB.Query("SELECT id, pseudo, psswrd, email, Image, Bio, nbpost, admin,NbNotifsPasvu FROM users WHERE uid = ?", uid)
+	rows, err := DB.Query("SELECT id, pseudo, psswd, email, Image, Bio, nbpost,likes, admin,NbNotifs,bp FROM users WHERE uid = ?", uid)
 	if err != nil {
 		panic(err)
 	}
 	var id int
 	var pseudo string
-	var psswrd string
+	var psswd string
 	var email string
 	var image string
 	var bio string
 	var nbpost int
+	var likes int
 	var admin int
 	var nbnotif int
+	var Bp int
 	// defer rows.Close()
 	for rows.Next() {
-		err := rows.Scan(&id, &pseudo, &psswrd, &email, &image, &bio, &nbpost, &admin, &nbnotif)
+		err := rows.Scan(&id, &pseudo, &psswd, &email, &image, &bio, &nbpost, &likes, &admin, &nbnotif, &Bp)
 		if err != nil {
 			panic(err)
 		}
@@ -44,34 +48,36 @@ func GetUser(uid string) User {
 	user := User{
 		Id:       id,
 		Pseudo:   pseudo,
-		Password: psswrd,
+		Password: psswd,
 		Email:    email,
 		Image:    image,
 		Bio:      bio,
 		Post:     nbpost,
 		Uid:      uid,
+		Likes:    likes,
 		Admin:    admin,
 		Nbnotif:  nbnotif,
+		BP:       Bp,
 	}
 	return user
 
 }
 
 func GetMail(lemail string) User {
-	rows, err := DB.Query("SELECT id, pseudo, psswrd, email, Image, Bio, nbpost FROM users WHERE email = ?", lemail)
+	rows, err := DB.Query("SELECT id, pseudo, psswd, email, Image, Bio, nbpost FROM users WHERE email = ?", lemail)
 	if err != nil {
 		panic(err)
 	}
 	var id int
 	var pseudo string
-	var psswrd string
+	var psswd string
 	var email string
 	var image string
 	var bio string
 	var nbpost int
 	// defer rows.Close()
 	for rows.Next() {
-		err := rows.Scan(&id, &pseudo, &psswrd, &email, &image, &bio, &nbpost)
+		err := rows.Scan(&id, &pseudo, &psswd, &email, &image, &bio, &nbpost)
 		if err != nil {
 			panic(err)
 		}
@@ -79,7 +85,7 @@ func GetMail(lemail string) User {
 	user := User{
 		Id:       id,
 		Pseudo:   pseudo,
-		Password: psswrd,
+		Password: psswd,
 		Email:    email,
 		Image:    image,
 		Bio:      bio,
@@ -89,7 +95,7 @@ func GetMail(lemail string) User {
 
 }
 
-func AddUser(id int, pseudo string, email string, psswrd string, gmail int, facebook int, github int) {
+func AddUser(id int, pseudo string, email string, psswd string, gmail int, facebook int, github int) {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	var seededRand *rand.Rand = rand.New(
 		rand.NewSource(time.Now().UnixNano()))
@@ -97,12 +103,12 @@ func AddUser(id int, pseudo string, email string, psswrd string, gmail int, face
 	for i := 0; i < 16; i++ {
 		uid += string(charset[seededRand.Intn(len(charset))])
 	}
-	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswrd, likes, nbpost, Bio, Image, gmail, facebook, github, admin,NbNotifsPasvu) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)")
+	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswd, likes, nbpost, Bio, Image, gmail, facebook, github, admin,NbNotifs,bp) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)")
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(uid, pseudo, email, psswrd, "", 0, "", "../assets/img/basepdp.png", gmail, facebook, github, 0, 0)
+	_, err = stmt.Exec(uid, pseudo, email, psswd, 0, 0, "", "/assets/img/basepdp.png", gmail, facebook, github, 0, 0, 0)
 	if err != nil {
 		panic(err)
 	}
@@ -116,15 +122,15 @@ func ChangeBio(idUser int, Description string) {
 }
 
 func ExistAccount(Pseudo string) (bool, string, string) {
-	rows, _ := DB.Query("SELECT pseudo ,psswrd,uid FROM users")
+	rows, _ := DB.Query("SELECT pseudo ,psswd,uid FROM users")
 	defer rows.Close()
 	for rows.Next() {
 		var each_pseudo string
-		var each_psswrd string
+		var each_psswd string
 		var uid string
-		_ = rows.Scan(&each_pseudo, &each_psswrd, &uid)
+		_ = rows.Scan(&each_pseudo, &each_psswd, &uid)
 		if each_pseudo == Pseudo {
-			return true, each_psswrd, uid
+			return true, each_psswd, uid
 		}
 	}
 	return false, "", "oui"
@@ -157,4 +163,34 @@ func Getuid(Pseudo string) string {
 		}
 	}
 	return uid
+}
+
+func GetNbLikesUser(uid string) int {
+	var nblikes int
+	err := DB.QueryRow("SELECT COUNT(*) FROM users WHERE uid = ?", uid).Scan(&nblikes)
+	if err != nil {
+		panic(err)
+	}
+	return nblikes
+}
+
+func GetNbLikesPost(id int) int {
+	var nblikes int
+	err := DB.QueryRow("SELECT COUNT(*) FROM likes WHERE id = ?", id).Scan(&nblikes)
+	if err != nil {
+		panic(err)
+	}
+	println(nblikes)
+	return nblikes
+}
+
+func AddBP(uid string) {
+	rand.Seed(time.Now().Unix())
+	randomNumber := rand.Intn(5)
+	if randomNumber == 1 {
+		_, err := DB.Exec("UPDATE users SET BP = BP  + 1 WHERE uid = ? ", uid)
+		if err != nil {
+			panic(err)
+		}
+	}
 }

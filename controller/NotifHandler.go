@@ -47,7 +47,7 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 			var redirect string
 			var view int
 			var image string
-			err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view,&image)
+			err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view, &image)
 			if err != nil {
 				panic(err)
 			}
@@ -79,25 +79,24 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 		var redirect string
 		var view int
 		var image string
-		err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view,&image)
+		err := rows.Scan(&id, &pseudo, &titre, &message, &date, &redirect, &view, &image)
 		if err != nil {
 			panic(err)
 		}
-
-		ExtractNotif.Id = id
-		ExtractNotif.Date = date
-		ExtractNotif.Titre = titre
-		ExtractNotif.Message = message
-		ExtractNotif.Pseudo = pseudo
-		ExtractNotif.Redirect = redirect
-		ExtractNotif.View = view
-		ExtractNotif.Image = image
-		TabNotif = append(TabNotif, ExtractNotif)
+		// if pseudo != user.Uid {
+			ExtractNotif.Id = id
+			ExtractNotif.Date = date
+			ExtractNotif.Titre = titre
+			ExtractNotif.Message = message
+			ExtractNotif.Pseudo = pseudo
+			ExtractNotif.Redirect = redirect
+			ExtractNotif.View = view
+			ExtractNotif.Image = image
+			TabNotif = append(TabNotif, ExtractNotif)
+		// }
 	}
 	reset := r.FormValue("reset")
 	goo := r.FormValue("go")
-	println("reset : ", reset)
-	println("goo : ", goo)
 	if reset == "reset" {
 		models.ResetNbNotif(name)
 		http.Redirect(w, r, "/notif", http.StatusSeeOther)
@@ -112,13 +111,18 @@ func NotifHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, redirect, http.StatusSeeOther)
 
 	}
+	for i, j := 0, len(TabNotif)-1; i < j; i, j = i+1, j-1 {
+		TabNotif[i], TabNotif[j] = TabNotif[j], TabNotif[i]
+	}
+	for i, j := 0, len(TabSignalements)-1; i < j; i, j = i+1, j-1 {
+		TabSignalements[i], TabSignalements[j] = TabSignalements[j], TabSignalements[i]
+	}
 	lapage := models.Notif_page{
 		User:         user,
 		Connect:      connected,
 		Notifs:       TabNotif,
 		Signalements: TabSignalements,
 	}
-
 	err = tmpl.Execute(w, lapage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

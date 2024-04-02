@@ -3,6 +3,7 @@ package controllers
 import (
 	models "forum/model"
 	"net/http"
+	"strings"
 	"text/template"
 )
 
@@ -28,7 +29,15 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newname := r.FormValue("changepseudo")
+	if strings.Contains(newname, "</"){
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
 	newbio := r.FormValue("bio")
+	if strings.Contains(newbio, "</"){
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
 	if newname != "" {
 		existe, _, _ := models.ExistAccount(newname)
 		if !existe {

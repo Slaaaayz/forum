@@ -15,7 +15,7 @@
             </div>
             <nav class="navbar">
                 <a href="/">Accueil</a>
-                <a href="/forum/1">Forum</a>
+                <a href="/forum">Forum</a>
                 <a href="/faq/1">FAQ</a>
             </nav>
             <form action="/search" method="post"class="search-bar">
@@ -62,7 +62,7 @@
                 <div>
                     <form action="/profile" method="post" class="postpseudo">
                         <div class="pseudocontour">
-                        <input class="changepseudo"type="text" placeholder="Entrez le pseudo" maxlength="15" name="changepseudo">
+                        <input class="changepseudo"type="text" autocomplete="off" placeholder="Entrez le pseudo" maxlength="15" name="changepseudo">
                         </div>
                         <input class="btn btn-info" type="submit">
                     </form>
@@ -86,7 +86,8 @@
                     <input class="btn btn-info" type="submit" />
                 </form>
                 </div>
-                <a href="/liked"><button class="btn btn-info">Voir ses posts likés</button></a>
+                <a href="/liked/{{.User.Id}}"><button class="btn btn-info">Voir ses posts likés</button></a>
+                <a href="/byuser/{{.User.Id}}"><button class="btn btn-info">Voir ses posts</button></a>
                 </div>
         </div>
 

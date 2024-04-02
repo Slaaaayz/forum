@@ -15,7 +15,7 @@
             </div>
             <nav class="navbar">
                 <a href="/">Accueil</a>
-                <a href="/forum/1">Forum</a>
+                <a href="/forum">Forum</a>
                 <a href="/faq/1">FAQ</a>
             </nav>
             <form action="/search" method="post"class="search-bar">
@@ -71,7 +71,7 @@
                                 <p class="description">{{.Description}}</p>
                                 </div>
                                 {{if eq .Resolved 1}}
-                                <div style="width: 30%;">
+                                <div style="width: 30%; margin-top: auto; margin-bottom: auto;">
                                     <img src="/assets/img/correct.png" class="img-correct">
                                     
                                 </div>
@@ -83,7 +83,10 @@
                             {{end}}
                         </div>
                         <div class="viewTopic">
-                            <a href="/faq/question/{{.Id}}" class="btn btn-info">View Topic</a>
+                            {{if eq $.User.Admin 1}}
+                            <a href="/delfaq/{{.Id}}" name="delete" value="del" class="btn btn-info" id="delfaq" >Supprimer Topic</a>
+                            {{end}}
+                            <a href="/faq/question/{{.Id}}" class="btn btn-info">Voir Topic</a>
                         </div>
                     </div>
                 </div>

@@ -17,6 +17,10 @@ import (
 func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 
 	commentaire := r.FormValue("commentaire")
+	if strings.Contains(commentaire, "</") {
+		http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
+		return
+	}
 	id_page := strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1]
 	idquest, err := strconv.Atoi(id_page)
 	if commentaire == "" {
@@ -57,9 +61,9 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	nextID := lastID + 1
 	file, fileheader, err := r.FormFile("file")
 	if err != nil {
-		println("t'envoie rien bg")
 		user := models.GetUser(name)
 		models.AddMessage(user.Uid, formattedTime, commentaire, idquest, "")
+		models.AddNbPost(user.Uid)
 		var uidcreator string
 		var TitreQuestion string
 		err = models.DB.QueryRow("SELECT UID FROM faq WHERE id = ?", id_page).Scan(&uidcreator)
@@ -71,8 +75,10 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		var Titre = "Nouveau Message sur votre question :" + TitreQuestion
-		models.AddNotif(uidcreator, Titre, commentaire, 0,"/faq/question/"+strconv.Itoa(idquest),user.Image)
-		models.AddNbNotif(uidcreator)
+		if user.Uid != uidcreator{
+			models.AddNotif(uidcreator, Titre, commentaire, 0, "/faq/question/"+strconv.Itoa(idquest), user.Image)
+			models.AddNbNotif(uidcreator)
+		}
 		http.Redirect(w, r, "/faq/question/"+strconv.Itoa(idquest), http.StatusFound)
 		return
 	}
@@ -106,9 +112,10 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user := models.GetUser(name)
 	models.AddMessage(user.Uid, formattedTime, commentaire, idquest, "/com_pics/"+strconv.Itoa(nextID)+extension)
+	models.AddNbPost(user.Uid)
 	var pseudocreator string
 	var TitreQuestion string
-	err = models.DB.QueryRow("SELECT CreatorUid FROM faq WHERE id = ?", id_page).Scan(&pseudocreator)
+	err = models.DB.QueryRow("SELECT Uid FROM faq WHERE id = ?", id_page).Scan(&pseudocreator)
 	if err != nil {
 		panic(err)
 	}
@@ -117,8 +124,10 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	var Titre = "Nouveau Message sur votre question :" + TitreQuestion
-	models.AddNotif(pseudocreator, Titre, commentaire, 0,"/faq/question/"+strconv.Itoa(idquest),user.Image)
-	models.AddNbNotif(pseudocreator)
+	if user.Uid != pseudocreator{
+		models.AddNotif(pseudocreator, Titre, commentaire, 0, "/faq/question/"+strconv.Itoa(idquest), user.Image)
+		models.AddNbNotif(pseudocreator)
+	}
 	// Redirection vers la page d'accueil
 	http.Redirect(w, r, "/faq/question/"+strconv.Itoa(idquest), http.StatusFound)
 }

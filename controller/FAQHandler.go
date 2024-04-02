@@ -11,8 +11,8 @@ import (
 )
 
 func FAQHandler(w http.ResponseWriter, r *http.Request) {
-	println("azer", strings.Split(r.URL.Path, "/")[2])
 	if (strings.Split(r.URL.Path, "/")[2]) != "assets" && strings.Split(r.URL.Path, "/")[2] != "end" && strings.Split(r.URL.Path, "/")[2] != "" {
+
 		var QPostsdata models.TabQP
 		nbpost := 0
 		cookie, err := r.Cookie("pseudo_user")
@@ -59,15 +59,30 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		user := models.GetUser(name)
+		if user.Admin == 1 {
+			del := r.FormValue("delete")
+			println("value : ", del)
+		}
+
 		var id_page int
-		id_page, _ = strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
+		id_page, err = strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
+		if err != nil {
+			NotFound(w, r, http.StatusNotFound)
+			return
+		}
 		// if id_page == 1 {
 		// 	QPostsdata.TabQP = QPostsdata.TabQP[0:11]
 		nb_page := nbpost / 10
 		if nbpost%10 != 0 {
 			nb_page++
 		}
-		println("kakou", id_page, nb_page)
+		if nbpost == 0 {
+			nb_page = 1
+		}
+		if id_page < nb_page {
+			NotFound(w, r, http.StatusNotFound)
+			return
+		}
 		if nbpost != 0 {
 			if id_page == nb_page {
 				QPostsdata.TabQP = QPostsdata.TabQP[id_page*10-10:]
@@ -89,15 +104,12 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 			UpPage:      currentpage + 1,
 		}
 		id_page, _ = strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
-		println(id_page)
-		// if id_page == 1 {
-		// 	QPostsdata.TabQP = QPostsdata.TabQP[0:11]
 
-		println("---------------")
-		println("FAQ")
-		println("nbpage : ", nb_page)
-		println("nbpost : ", nbpost)
-		println("---------------")
+		// println("---------------")
+		// println("FAQ")
+		// println("nbpage : ", nb_page)
+		// println("nbpost : ", nbpost)
+		// println("---------------")
 		tmpl, err := template.ParseFiles("./view/faq.html")
 		if err != nil {
 			fmt.Println(err.Error())

@@ -1,7 +1,5 @@
 package models
 
-import "slices"
-
 type Tags struct {
 	Id     int
 	Name   string
@@ -85,7 +83,7 @@ func GetFAQByTag(tag []Tags) TabQP {
 			if err != nil {
 				panic(err)
 			}
-			if !slices.Contains(IDs, id) {
+			if !Contain(IDs, id) {
 				IDs = append(IDs, id)
 				TheQuestion.Id = id
 				TheQuestion.Name = CreatorUID
@@ -99,4 +97,13 @@ func GetFAQByTag(tag []Tags) TabQP {
 		TabQ.TabQP = Questions
 	}
 	return TabQ
+}
+
+func Contain(tab []int, id int) bool {
+	for i := 0; i < len(tab); i++ {
+		if tab[i] == id {
+			return true
+		}
+	}
+	return false
 }

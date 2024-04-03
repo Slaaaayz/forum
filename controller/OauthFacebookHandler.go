@@ -29,7 +29,7 @@ func init() {
 	oauthConfigFace = &oauth2.Config{
 		ClientID:     "217454641429723",
 		ClientSecret: "357893880af7f30c77540c8dcfd82002",
-		RedirectURL:  "http://localhost:8080/callbackfacebook",
+		RedirectURL:  "https://groupe9.etudiants.ynov-bordeaux.com/callbackfacebook",
 		Scopes:       []string{"email"},
 		Endpoint:     facebook.Endpoint,
 	}

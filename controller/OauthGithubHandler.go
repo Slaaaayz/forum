@@ -28,7 +28,7 @@ func init() {
 	oauthConfigGit = &oauth2.Config{
 		ClientID:     "Iv1.e4f1f019b740c63c",
 		ClientSecret: "12b6be636d7d9d8bee0b004839e419d347ee8388",
-		RedirectURL:  "http://localhost:8080/callbackgithub",
+		RedirectURL:  "https://groupe9.etudiants.ynov-bordeaux.com/callbackgithub",
 		Scopes:       []string{"user:email"},
 		Endpoint:     github.Endpoint,
 	}

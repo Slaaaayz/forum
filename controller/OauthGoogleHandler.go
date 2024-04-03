@@ -28,7 +28,7 @@ func init() {
 	oauthConfig = &oauth2.Config{
 		ClientID:     "418708438714-ei563kalln49c1faovbfv9md05562d1j.apps.googleusercontent.com",
 		ClientSecret: "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",
-		RedirectURL:  "http://localhost:8080/callbackgoogle",
+		RedirectURL:  "https://groupe9.etudiants.ynov-bordeaux.com/callbackgoogle",
 		Scopes:       []string{"email"},
 		Endpoint:     google.Endpoint,
 	}

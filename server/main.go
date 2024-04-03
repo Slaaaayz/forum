@@ -58,7 +58,7 @@ func main() {
 	http.HandleFunc("/byuser/", controllers.ByUserHandler)
 	http.HandleFunc("/delfaq/", controllers.DelFaqHandler)
 	http.HandleFunc("/deltopic/", controllers.DelTopicHandler)
-	err := http.ListenAndServe("localhost:8080", nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("Erreur lors du démarrage du serveur:", err)
 	}

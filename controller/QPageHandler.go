@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -22,7 +21,7 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 
 	id_page1, _ := strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
 	var maxID int
-	err := models.DB.QueryRow("SELECT MAX(id) FROM faq").Scan(&maxID)
+	err := models.DB.QueryRow("SELECT COALESCE(MAX(id),0) FROM faq").Scan(&maxID)
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +54,6 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		fmt.Println("Données reçues :", data.Id, data.Mess)
 		if data.Type == "edit" {
 			if strings.Contains(data.Mess, "</"){
 				http.Redirect(w, r, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", http.StatusSeeOther)
@@ -83,11 +81,8 @@ func QPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//requette http
-
-	println("url :", r.URL.Path)
 	idquest, err := strconv.Atoi(id_page)
 	if err != nil {
-		fmt.Println("Erreur lors de la conversion:", err)
 		return
 	}
 

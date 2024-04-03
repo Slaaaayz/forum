@@ -1,5 +1,4 @@
 package models
-
 type FAQ_page struct {
 	User        User
 	TabQuestion TabQP
@@ -10,56 +9,50 @@ type FAQ_page struct {
 	DownPage    int
 	UpPage      int
 }
-
 type Notif_page struct {
 	User         User
 	Connect      bool
 	Notifs       []Notif
 	Signalements []Notif
 }
-
 type Search_Page struct {
-	User    User
-	Connect bool
-	Search string
+	User         User
+	Connect      bool
+	Search       string
 	LesQuestions TabQP
-	LesTopics []Topic
-	RandomPost []TPost
-	//tableau de q post et topic 
+	LesTopics    []Topic
+	RandomPost   []TPost
+	//tableau de q post et topic
 }
-
 type VP_page struct {
 	User     User
 	Connect  bool
 	UserView User
 }
-
 type Topic_page struct {
-	User     User
+	User       User
 	Categories Categories
-	Topic    Topic
-	Nbpage   int
-	Connect  bool
-	Pages    []int
+	Topic      Topic
+	Nbpage     int
+	Connect    bool
+	Pages      []int
 }
-
 type Post_page struct {
 	User    User
 	TPost   TPost
 	Nbpage  int
 	Connect bool
 	Pages   []int
+	Topic   Topic
 }
-
 type Login_page struct {
 	Message_login    string
 	Message_register string
 }
-
 type Home_page struct {
 	User    User
 	Connect bool
-	FYPage []TPost
+	FYPage  []TPost
 	AboPage []TPost
 }
 type FAQ_Q_page struct {
@@ -72,7 +65,6 @@ type Profile_Page struct {
 	Connect             bool
 	MessageChangePseudo string
 }
-
 type Q_page struct {
 	User  User
 	QPost QPost
@@ -81,9 +73,12 @@ type Q_page struct {
 	// Pages   []int
 	APosts []APost
 }
-
-type Likes_page struct{
+type Likes_page struct {
+	User    User
+	Connect bool
+	Post    []TPost
+}
+type Shop_page struct {
 	User User
 	Connect bool
-	Post []TPost
 }

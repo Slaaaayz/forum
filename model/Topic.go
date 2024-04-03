@@ -1,11 +1,8 @@
 package models
-
 import "strings"
-
 type TabCat struct {
 	Topic []Topic
 }
-
 type Topic struct {
 	Id          int
 	Name        string
@@ -14,10 +11,9 @@ type Topic struct {
 	User        string
 	NbAbo       int
 	NbPost      int
-	IsAbo bool
+	IsAbo       bool
 	Answer      []TPost
 }
-
 type Categories struct {
 	Divertissement []Topic
 	Éducation      []Topic
@@ -25,7 +21,6 @@ type Categories struct {
 	Mdv            []Topic
 	Sciences       []Topic
 }
-
 // var Actualités_événements Topics
 // var Divertissement Topics
 // var Modebeauté Topics
@@ -40,7 +35,6 @@ func AddTopic(name string, description string, creator string, cate int) {
 		panic(err)
 	}
 }
-
 func GetTopicByName(Search string) []Topic {
 	var TabTopic []Topic
 	rows, err := DB.Query("SELECT id,uid,name,Description,Nbabo,Nbpost from topic ")
@@ -68,13 +62,11 @@ func GetTopicByName(Search string) []Topic {
 			Topic.NbAbo = Nbabo
 			Topic.NbPost = Nbpost
 			TabTopic = append(TabTopic, Topic)
-
 		}
 	}
 	return TabTopic
 }
-
-func GetAllPosts()[]TPost{
+func GetAllPosts() []TPost {
 	var AllPosts []TPost
 	rows, err := DB.Query("SELECT id,name,post,date,IdTopic,Image,Likes,Tags1ID,Tags2ID,Tags3ID,Tags4ID,Tags5ID from post ")
 	if err != nil {
@@ -94,24 +86,22 @@ func GetAllPosts()[]TPost{
 		var tags3ID string
 		var tags4ID string
 		var tags5ID string
-		err = rows.Scan(&id,&name,&post,&date,&idtopic,&image,&likes,&tags1ID,&tags2ID,&tags3ID,&tags4ID,&tags5ID)
-		var Tags = []string{tags1ID,tags2ID,tags3ID,tags4ID,tags5ID}
+		err = rows.Scan(&id, &name, &post, &date, &idtopic, &image, &likes, &tags1ID, &tags2ID, &tags3ID, &tags4ID, &tags5ID)
+		var Tags = []string{tags1ID, tags2ID, tags3ID, tags4ID, tags5ID}
 		ThePost := TPost{
-			Id: id,
-			Name: GetUser(name).Pseudo,
-			Post: post,
-			Date: date,
+			Id:      id,
+			Name:    GetUser(name).Pseudo,
+			Post:    post,
+			Date:    date,
 			IdTopic: idtopic,
-			Image: image,
-			Likes: GetNbLikesPost(id),
-			Tags: Tags,
-			IdUser: GetUser(name).Id,
-			Pdp: GetUser(name).Image,
+			Image:   image,
+			Likes:   GetNbLikesPost(id),
+			Tags:    Tags,
+			IdUser:  GetUser(name).Id,
+			Pdp:     GetUser(name).Image,
 			IsLiked: IsLiked(name, id),
-			
 		}
 		AllPosts = append(AllPosts, ThePost)
-
 	}
 	return AllPosts
 }

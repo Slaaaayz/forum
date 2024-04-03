@@ -9,40 +9,45 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
     <body>
-    <header class="header">
-        <div class="name">
-            <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
-            <a href="/" class="logo">Bᴀᴍʙᴏᴏ
-        </div>
-        <nav class="navbar">
-            <a href="/">Accueil</a>
-            <a href="/forum">Forum</a>
-            <a href="/faq/1">FAQ</a>
-        </nav>
-        <form action="/search" method="post"class="search-bar">
-            <input name="search"type="text" placeholder="Search...">
-            <button type="submit"><i class='bx bx-search'></i></button>
-        </form>
-        {{if .Connect}}        
-        <div class="navbar2">
-            <ul>
-                <li class="menu-deroulant">
-                    <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
-                  <ul class="sous-menu">
-                    <li><a href="/profile">Profil</a></li>
-                    <li><a href="/notif">Notifications ({{.User.Nbnotif}})</a></li>
-                    <li><a href="/deco">Se déconnecter</a></li>
-                  </ul>
-                </li>
-        </div>
-        {{else}}
-        <div class="navbar2">
-            <a href="/login" class="MainButton">Se connecter</a>
-        </div>
-        {{end}}
-
-    </header>
-
+        <header class="header">
+            <div class="name">
+                <a href="/"><img src="../assets/img/image.blancpng.png  " alt="Bambou">
+                <a href="/" class="logo">Bᴀᴍʙᴏᴏ</a>
+            </div>
+            <nav class="navbar">
+                <a href="/">Accueil</a>
+                <a href="/forum">Forum</a>
+                <a href="/faq/1">FAQ</a>
+            </nav>
+            <form action="/search" method="post"class="search-bar">
+                <input name="search"type="text" placeholder="Search...">
+                <button type="submit"><i class='bx bx-search'></i></button>
+            </form>
+            {{if .Connect}}        
+            <div class="navbar2">
+                <ul>
+                    <li class="menu-deroulant">
+                        {{if not (eq .User.Nbnotif 0)}}
+                        <div class="dot-notif">
+                            <span class="badge"></span> 
+                        </div>
+                        {{end}}
+                        <a href="" class="MainButtonpdp"><img class="pdp"src="{{.User.Image}}"></a>
+                      <ul class="sous-menu">
+                        <li><a href="/profile">Profil</a></li>
+                        <li><a href="/notif">Notifications({{.User.Nbnotif}})</a></li>
+                        <li><a href="/boutique">Boutique ({{.User.BP}} Points)</a></li>
+                        <li><a href="/deco">Se déconnecter</a></li>
+                      </ul>
+                    </li>
+            </div>
+            {{else}}
+            <div class="navbar2">
+                <a href="/login" class="MainButton">Se connecter</a>
+            </div>
+            {{end}}
+    
+        </header>
 
     <div class="container">
         <div class="connection">
@@ -101,29 +106,28 @@
         <div class="container2">
             <div class="row">
                 <div class="footer-col">
-                    <h4>About US</h4>
+                    <h4>A propos de nous</h4>
                     <ul>
                         <li><a href="#"></a></li>
-                        <li><a href="#">our services</a></li>
-                        <li><a href="#">privacy policy</a></li>
-                        <li><a href="#">affiliate program</a></li>
+                        <li><a href="/boutique">Boutique</a></li>
+                        <li><a href="https://groupe10.etudiants.ynov-bordeaux.com/">programme affilié</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>get help</h4>
+                    <h4>Obtenir de l'aide</h4>
                     <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">forum</a></li>
-                        <li><a href="#">contact us</a></li>
+                        <li><a href="/faq/1">FAQ</a></li>
+                        <li><a href="/forum/">forum</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Contactez-nous</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>follow us</h4>
+                    <h4>Nous suivre</h4>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>

@@ -56,10 +56,12 @@
         </div>
         <div>
         <div class="forum-topic-info-profil">
+            <div>
             <a href="/ViewProfil/{{.TPost.IdUser}}"><img src="{{.TPost.Pdp}}" alt="pdp"></a>
             <div class="both-topic">
                 <h2>{{.TPost.Name}}</h2>
                 <p>{{.TPost.Date}}</p>
+            </div>
             </div>
             <div class="container3dots">
                 <div class="more" onclick="showMenu(this)" value="test">
@@ -126,8 +128,10 @@
                     <img src="/assets/img/basepdp.png" alt="pdp">
                     <div class="reply">
                         <div class="both-topic-reply">
+                            <div>
                             <h2>John Doe</h2>
                             <p class="date">12/12/2021</p>
+                        </div>
                             <div class="container3dots">
                                 <div class="more" onclick="showMenu(this)" value="test">
                                     <button id="more-btn" class="more-btn" >
@@ -172,8 +176,10 @@
                     <img src="/assets/img/basepdp.png" alt="pdp">
                     <div class="reply">
                         <div class="both-topic-reply-v2">
+                            <div>
                             <h2>John Doe</h2>
                             <p class="date">12/12/2021</p>
+                        </div>
                             <div class="container3dots">
                                 <div class="more" onclick="showMenu(this)" value="test">
                                     <button id="more-btn" class="more-btn" >
@@ -209,9 +215,31 @@
                                 <p>@John Doe ipsum dolor sit amet consectetur adipisicing elit. Fugit eaque vitae explicabo quod ab ex incidunt facere quia autem culpa, labore ratione rerum dolorum commodi ea deleniti nisi exercitationem! Dolorum!</p>
                             </div> 
                         <button onclick="displayText()" class="btn-reply">Répondre</button>
+                                </div>
+                                
+                            </div>
+                    </div>
+                <div class="writemsg"> 
+                    <div class="placeh2msg">
+                    <div id="textField">
+                        <form action="#" method="post" enctype="multipart/form-data">
+                            <textarea name="commentaire" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
+                            <div class="quoicoucrampte">
+                            <div class="both"> 
+                                <input type="submit" class="submit">
+                                <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
+                            </div>
+                            <input type="submit" value="Annuler"class="submitAnnuler" onclick="displayText()">
+                            </div>
+                            
+                        </form>
                     </div>
                     </div>
                 </div>
+                    </div>
+                    
+                </div>
+                
             </div>
         </div>
     </div>

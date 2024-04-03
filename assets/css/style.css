@@ -254,6 +254,7 @@ ul{
 	background-color: #24262b;
     padding: 70px 0;
     bottom: 0px;
+    width: 100%;
 
 }
 .footer-col{
@@ -609,7 +610,6 @@ textarea:focus {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 20px;
 }
 
 .seeprofil {

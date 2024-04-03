@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -57,6 +56,7 @@ func LikedHandler(w http.ResponseWriter, r *http.Request) {
 		Thepost.Likes = models.GetNbLikesPost(id)
 		Thepost.Name = models.GetUser(name).Pseudo
 		Thepost.IdUser = models.GetUser(name).Id
+		Thepost.Pdp = models.GetUser(name).Image
 		Thepost.Post = post
 		LikesPost = append(LikesPost, Thepost)
 
@@ -69,7 +69,6 @@ func LikedHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		fmt.Println("Données reçues :", data.Id, data.Mess)
 		if connected {
 			if data.Type == "likePost" {
 				idpost, _ := strconv.Atoi(data.Id)

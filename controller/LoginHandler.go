@@ -31,7 +31,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		existaccount, psswd, _ := models.ExistAccount(pseudo_login)
 		if existaccount && psswd == hex.EncodeToString((passloghash[:])) {
-			println("connexion reussi")
 			uid := models.Getuid(pseudo_login)
 			http.SetCookie(w, &http.Cookie{
 				Name:   "pseudo_user",
@@ -40,10 +39,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} else if existaccount {
-			println("mauvais mot de passe")
 			message1 = "Mauvais Mot de passe"
 		} else {
-			println("compte inexistant")
 			message1 = "Compte inexistant / Mauvais Pseudo"
 		}
 	}
@@ -54,11 +51,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		match, _ := regexp.MatchString(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, email_register)
 		if !match {
-			println("email invalide")
 			message2 = "Email invalide"
 		} else {
 			models.AddUser(1, pseudo_register, email_register, hex.EncodeToString(passreghash[:]), 0, 0, 0)
-			println("creation de compte reussi")
 		}
 	}
 	lapage := models.Login_page{

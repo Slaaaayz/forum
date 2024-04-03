@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -42,7 +41,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		fmt.Println("Données reçues :", data.Id, data.Mess)
 		if connected {
 			if data.Type == "likePost" {
 				idpost, _ := strconv.Atoi(data.Id)
@@ -64,8 +62,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		FYPage:  fy,
 		AboPage: models.TakeAboPost(user.Uid),
 	}
-	println("pseudo : ",user.Pseudo)
-	println("connected : ", connected)
 	err = tmpl.Execute(w, lapage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

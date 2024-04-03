@@ -13,7 +13,6 @@ import (
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, fileheader, err := r.FormFile("file")
 	if err != nil {
-		println("t'envoie rien bg")
 		http.Redirect(w, r, "/profile", http.StatusFound)
 		return
 	}

@@ -204,10 +204,12 @@
 
 .both-topic-reply {
     display: flex;
+    justify-content: space-between;
 }
 
 .both-topic-reply-v2 {
     display: flex;
+    justify-content: space-between;
 }
 
 .reply {

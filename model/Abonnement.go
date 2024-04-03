@@ -7,7 +7,6 @@ func AddAbo(Uid string, Topicid int) {
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(Uid, Topicid)
-	println("abo !!")
 	if err != nil {
 		panic(err)
 	}

@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -67,7 +66,6 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			TPextra.Pdp = models.GetUser(name).Image
 			TPextra.IdUser = models.GetUser(name).Id
 			TPextra.IsLiked = models.IsLiked(user.Uid, id)
-
 			Textra.Answer = append(Textra.Answer, TPextra)
 		}
 
@@ -92,7 +90,6 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				panic(err)
 			}
-
 			Textra.Id = id
 			Textra.Name = name
 			Textra.Description = description
@@ -109,7 +106,6 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			fmt.Println("Type de données recu :", data.Type)
 			if connected {
 				if data.Type == "likePost" {
 					idpost, _ := strconv.Atoi(data.Id)
@@ -158,10 +154,10 @@ func TopicHandler(w http.ResponseWriter, r *http.Request) {
 			User:    user,
 			Connect: connected,
 			Topic:   Textra,
-			Nbpage:  id_page,
+			Nbpage: id_page,
 		}
 
-		tmpl, err := template.ParseFiles("./view/allTopic.html")
+		tmpl, err := template.ParseFiles("./view/alltopic.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

@@ -25,7 +25,6 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	idquest, err := strconv.Atoi(id_page)
 	if commentaire == "" {
 		http.Redirect(w, r, "/faq/question/"+strconv.Itoa(idquest), http.StatusFound)
-		println("commentaire vide")
 		return
 	}
 	if _, err := os.Stat("com_pics"); os.IsNotExist(err) {
@@ -34,7 +33,6 @@ func QPageSubmitHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Erreur lors de la création du dossier:", err)
 			return
 		}
-		fmt.Println("Le dossier a été créé avec succès.")
 	}
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("15:04 02/01/2006")

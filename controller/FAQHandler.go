@@ -59,10 +59,6 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		user := models.GetUser(name)
-		if user.Admin == 1 {
-			del := r.FormValue("delete")
-			println("value : ", del)
-		}
 
 		var id_page int
 		id_page, err = strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])

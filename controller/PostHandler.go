@@ -1,9 +1,7 @@
 package controllers
-
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	models "forum/model"
 	"net/http"
 	"strconv"
@@ -11,22 +9,23 @@ import (
 	"text/template"
 	"time"
 )
-
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	var Cextra models.APost
 	var TPextra models.TPost
+	var Textra models.Topic
 	nbpost := 0
 	connected := true
-	var parentid int
+	ptr := new(int)
 	id_page, _ := strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
-
 	Answer := r.FormValue("Answer")
+	CId := r.Form.Get("additionalData")
+	ComId, err := strconv.Atoi(CId)
+	if err != nil {
+	}
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("15:04 02/01/2006")
 	image := r.FormValue("Image")
-
 	if (strings.Split(r.URL.Path, "/")[2]) != "assets" && strings.Split(r.URL.Path, "/")[2] != "end" {
-
 		cookie, err := r.Cookie("pseudo_user")
 		var name string
 		if err != nil {
@@ -35,7 +34,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			name = cookie.Value
 		}
 		user := models.GetUser(name)
-
 		rows, err := models.DB.Query("SELECT id, name, post, date, idtopic, image, likes FROM post WHERE id = ?", id_page)
 		if err != nil {
 			panic(err)
@@ -53,6 +51,8 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				panic(err)
 			}
+			ptr = &idtopic
+			
 			TPextra.Id = id
 			TPextra.Name = models.GetUser(name).Pseudo
 			TPextra.Date = date
@@ -61,17 +61,13 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			TPextra.Likes = models.GetNbLikesPost(id)
 			TPextra.Post = post
 			TPextra.Pdp = models.GetUser(name).Image
-
 			TPextra.IsLiked = models.IsLiked(user.Uid, id)
-			println("id : ", TPextra.IsLiked)
-
 		}
-
 		if name != "" {
 			if Answer != "" || image != "" {
 				Cextra.Content = Answer
 				Cextra.Image = image
-				models.AddCom(name, parentid, Cextra.Content, formattedTime, TPextra.IdTopic, TPextra.Id, Cextra.Image)
+				models.AddCom(name, ComId, Cextra.Content, formattedTime, TPextra.IdTopic, TPextra.Id, Cextra.Image)
 				http.Redirect(w, r, "/forum/topic/post/"+strconv.Itoa(id_page), http.StatusSeeOther)
 				return
 			}
@@ -79,7 +75,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			connected = false
 		}
 		Answer = ""
-
 		db, err := sql.Open("sqlite3", "DataBase.db")
 		if err != nil {
 			panic(err)
@@ -103,7 +98,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				panic(err)
 			}
-
 			if parentid == 0 {
 				Cextra.Uid = uid
 				Cextra.Parentid = parentid
@@ -121,16 +115,43 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-
+		db, err = sql.Open("sqlite3", "DataBase.db")
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		rows, err = db.Query("SELECT id, Name, Description, Uid, NbAbo, NbPost FROM Topic WHERE Id = ?", *ptr)
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var id int
+			var name string
+			var description string
+			var uid string
+			var NbAbo int
+			var NbPost int
+			err := rows.Scan(&id, &name, &description, &uid, &NbAbo, &NbPost)
+			if err != nil {
+				panic(err)
+			}
+			Textra.Id = id
+			Textra.Name = name
+			Textra.Description = description
+			Textra.NbAbo = NbAbo
+			Textra.NbPost = NbPost
+			Textra.IsAbo = models.IsAbo(user.Uid, id)
+			
+			nbpost++
+		}
 		//requete http
-
 		if r.Method == "POST" {
 			var data Data
 			if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			fmt.Println("Données reçues :", data.Id, data.Mess)
 			if connected {
 				if data.Type == "likePost" {
 					idpost, _ := strconv.Atoi(data.Id)
@@ -161,19 +182,18 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/login", http.StatusSeeOther)
 			}
 		}
-
-		lapage := models.Post_page{
+		page := models.Post_page{
 			User:    user,
 			Connect: connected,
 			TPost:   TPextra,
 			Nbpage:  id_page,
+			Topic:   Textra,
 		}
-
-		tmpl, err := template.ParseFiles("./view/post.html")
+		tmpl, err := template.ParseFiles("./view/Post.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		err = tmpl.Execute(w, lapage)
+		err = tmpl.Execute(w, page)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

@@ -110,7 +110,6 @@ func TPostHandler(w http.ResponseWriter, r *http.Request) {
 				models.AddNbPost(name)
 				http.Redirect(w, r, "/forum/topic/"+strconv.Itoa(id_page), http.StatusSeeOther)
 			} else {
-				println("add pic")
 				defer file.Close()
 				extension := filepath.Ext(fileheader.Filename)
 				if extension == ".gif" || extension == ".jpg" || extension == ".png" {

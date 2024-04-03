@@ -54,27 +54,6 @@
             {{if .Post}}
             {{range .Post}}
             <div class="allTopic">
-<<<<<<< HEAD
-            <div class="forum-topic-info-profil">
-                <div class="both-profil">
-                <a href="/ViewProfil/{{.IdUser}}"><img src="/assets/img/basepdp.png" alt="pdp"></a>
-                <div class="both-topic">
-                    <h2>{{.Name}}</h2>
-                    <p>{{.Date}}</p>
-                </div>
-                </div>
-                <div class="container3dots">
-                    <div class="more" onclick="showMenu(this)" value="test">
-                        <button id="more-btn" class="more-btn" >
-                            <span class="more-dot"></span>
-                            <span class="more-dot"></span>
-                            <span class="more-dot"></span>
-                        </button>
-                        <div class="more-menu">
-                            <div class="more-menu-caret">
-                                <div class="more-menu-caret-outer"></div>
-                                <div class="more-menu-caret-inner"></div>
-=======
                 <div class="forum-topic-info-profil">
                     <a href="/ViewProfil/{{.IdUser}}"><img src="{{.Pdp}}" alt="pdp"></a>
                     <div class="both-topic">
@@ -113,7 +92,6 @@
                                         <button type="button" value="{{.Id}}" onclick="Signaler(this)"class="more-menu-btn" role="menuitem">Signaler</button>
                                     </li>
                                 </ul>
->>>>>>> 9d5700b0da60d3910f080477689b7b3aae54209b
                             </div>
                         </div>
                     </div>

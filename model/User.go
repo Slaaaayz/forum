@@ -23,7 +23,7 @@ type User struct {
 }
 
 func GetUser(uid string) User {
-	rows, err := DB.Query("SELECT id, pseudo, psswd, email, Image, Bio, nbpost,likes, admin,NbNotifs,bp FROM users WHERE uid = ?", uid)
+	rows, err := DB.Query("SELECT id, pseudo, psswd, email, Image, Bio, nbpost, likes, admin, NbNotifs ,bp FROM users WHERE uid = ?", uid)
 	if err != nil {
 		panic(err)
 	}
@@ -63,8 +63,8 @@ func GetUser(uid string) User {
 
 }
 
-func GetMail(lemail string) User {
-	rows, err := DB.Query("SELECT id, pseudo, psswd, email, Image, Bio, nbpost FROM users WHERE email = ?", lemail)
+func GetMail(mail string) User {
+	rows, err := DB.Query("SELECT id, pseudo,  psswd, email, Image, Bio, nbpost FROM users WHERE email = ?", mail)
 	if err != nil {
 		panic(err)
 	}
@@ -103,7 +103,7 @@ func AddUser(id int, pseudo string, email string, psswd string, gmail int, faceb
 	for i := 0; i < 16; i++ {
 		uid += string(charset[seededRand.Intn(len(charset))])
 	}
-	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswd, likes, nbpost, Bio, Image, gmail, facebook, github, admin,NbNotifs,bp) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)")
+	stmt, err := DB.Prepare("INSERT INTO users(uid, pseudo, email, psswd, likes, nbpost, Bio, Image, gmail, facebook, github, admin, NbNotifs,bp ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)")
 	if err != nil {
 		panic(err)
 	}
@@ -122,7 +122,7 @@ func ChangeBio(idUser int, Description string) {
 }
 
 func ExistAccount(Pseudo string) (bool, string, string) {
-	rows, _ := DB.Query("SELECT pseudo ,psswd,uid FROM users")
+	rows, _ := DB.Query("SELECT pseudo , psswd, uid FROM users")
 	defer rows.Close()
 	for rows.Next() {
 		var each_pseudo string

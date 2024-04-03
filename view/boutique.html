@@ -6,6 +6,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/boutique.css">
 </head>
     <body>
     <header class="header">
@@ -40,46 +41,18 @@
         </div>
         {{end}}
     </header>
-    {{$ID := .Nbpage}}
-    <div class="container">
-        <div class="Title">
-            {{if .TPost}}
-            <h2><a href="/forum/topic/post/{{.TPost.Id}}">{{.TPost.Post}}</a></h2>
-            <h4>{{.TPost.Name}}</h4>
-            <h3>{{.TPost.Date}}</h3>
-            {{range .TPost.Answers}}
-            <h2><a href="/forum/topic/post/answer/{{.Commentid}}">{{.Content}}</a></h2>
-            {{if eq .Commentid $ID}}
-            <form action="" method="post" enctype="multipart/form-data">
-                <textarea name="Answer" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
-                <div class="quoicoucrampte">
-                <div class="both"> 
-                    <input type="submit" class="submit">
-                    <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
-                </div>
-                <input type="submit" value=""class="submitAnnuler" onclick="displayText()">
-                </div>
-            </form>
-            {{end}}
-            {{range .Answers}}
-            <h3><a href="/forum/topic/post/answer/{{.Commentid}}">{{.Content}}</a></h3>
-            {{if eq .Commentid $ID}}
-            <form action="" method="post" enctype="multipart/form-data">
-                <textarea name="Answer" placeholder="Ecrivez votre commentaire" id="" cols="150" rows="4"></textarea>
-                <div class="quoicoucrampte">
-                <div class="both"> 
-                    <input type="submit" class="submit">
-                    <label class="imageuploadviafile"><input type="file" name="file" accept=".jpg, .jpeg, .png" multiple style="display: none;"/><a>Selectionnez images</a></label>
-                </div>
-                <input type="submit" value=""class="submitAnnuler" onclick="displayText()">
-                </div>
-            </form>
-            {{end}}
-            {{end}}
-            {{end}}
-            {{end}}
-        </div>
-    </div>
+    <main>
+        <div class="boutique">
+        <section class="product">
+            <img src="#" alt="Tee-shirt Bamboo">
+            <h2>Tee-shirt à Motif</h2>
+            <p>Description: Un tee-shirt avec un motif unique.</p>
+            <p>Prix: 100 Bamboo</p>
+            <button>Acheter</button>
+        </section>
+  
+    </main>
+</div>
     <footer class="footer">
         <div class="container2">
             <div class="row">

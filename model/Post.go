@@ -20,17 +20,17 @@ type TabQP struct {
 }
 
 type APost struct {
-	Comment_Id int
-	Uid        string
-	Parent_Id  int
-	Name       string
-	Content    string
-	Date       string
-	IdQuest    int
-	IdTopic    int
-	Post_id    int
-	Image      string
-	Likes      int
+	Commentid int
+	Uid       string
+	Parentid  int
+	Name      string
+	Content   string
+	Date      string
+	IdTopic   int
+	Postid    int
+	Image     string
+	Likes     int
+	Answers   []APost
 	// Check  bool
 	// Likes  int
 }
@@ -93,13 +93,13 @@ func AddNbPost(uid string) {
 		panic(err)
 	}
 }
-func AddCom(uid string, parent_Id int, content string, date string, idtopic int, post_id int, image string) { //, likes int) {
-	stmt, err := DB.Prepare("INSERT INTO Com(Uid, Parent_Id, Content, Date, IdTopic, Post_Id, Image) VALUES( ?, ?, ?, ?, ?, ?, ?)")
+func AddCom(uid string, parentid int, content string, date string, idtopic int, postid int, image string) { //, likes int) {
+	stmt, err := DB.Prepare("INSERT INTO Com(Uid, Parentid, Content, Date, IdTopic, Postid, Image) VALUES( ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(uid, parent_Id, content, date, idtopic, post_id, image)
+	_, err = stmt.Exec(uid, parentid, content, date, idtopic, postid, image)
 	if err != nil {
 		panic(err)
 	}

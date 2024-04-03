@@ -49,7 +49,7 @@ func VProfilHandler(w http.ResponseWriter, r *http.Request) {
 	var admin int
 	var likes int
 	var nbnotif int
-	err = models.DB.QueryRow("SELECT uid, pseudo, psswd, email, Image, Bio, nbpost,likes, admin,NbNotifs FROM users WHERE id = ?", idpage).Scan(&uid, &pseudo, &psswd, &email, &image, &bio, &nbpost, &likes, &admin, &nbnotif)
+	err = models.DB.QueryRow("SELECT uid, pseudo, psswd, email, Image, Bio, nbpost, likes, admin, NbNotifs FROM users WHERE id = ?", idpage).Scan(&uid, &pseudo, &psswd, &email, &image, &bio, &nbpost, &likes, &admin, &nbnotif)
 	if err != nil {
 		panic(err)
 	}

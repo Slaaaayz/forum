@@ -27,7 +27,6 @@ func LoadPost(uid string) []TPost {
 
 func GetRandomPost(NbPost int) []TPost {
 	var likes = GetMoyLikes() / 3
-	println("nb likes apres division :", likes)
 	var AllPosts = GetAllPosts()
 	if len(AllPosts) == 0 {
 		return []TPost{}
@@ -40,7 +39,6 @@ func GetRandomPost(NbPost int) []TPost {
 		NbBoucle++
 
 		random := rand.Intn(len(AllPosts))
-		println("lepost random : ", random)
 		if AllPosts[random].Likes >= likes || NbBoucle > 50 {
 			RandomPost = append(RandomPost, AllPosts[random])
 		}
@@ -192,7 +190,6 @@ func TakeAboPost(uid string) []TPost {
 		ThePost.Name = GetUser(name).Pseudo
 		ThePost.Pdp = GetUser(name).Image
 		ThePost.Post = post
-		println(ThePost.Name)
 		AllPost = append(AllPost, ThePost)
 	}
 	if len(AllPost) == 0 {

@@ -8,16 +8,18 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func AnswerHandler(w http.ResponseWriter, r *http.Request) {
-	var Cextra models.APost
 	var TPextra models.TPost
+	var Cextra models.APost
 	nbpost := 0
 	connected := true
 	id_page, _ := strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
 
-	Answer := r.FormValue("Reply")
+	Answer := r.FormValue("Answer")
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("15:04 02/01/2006")
 	image := r.FormValue("Image")
@@ -37,73 +39,44 @@ func AnswerHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		defer db.Close()
-		rows, err := db.Query("SELECT Comment_id, Uid, Parent_Id, Content, Date, IdTopic, Post_Id, Image FROM com WHERE Comment_id = ?", id_page)
+		rows, err := db.Query("SELECT commentid, uid, parentid, content, date, idtopic, postid, image FROM com WHERE commentid = ?", id_page)
 		if err != nil {
 			panic(err)
 		}
 		defer rows.Close()
 		for rows.Next() {
-			var comment_id int
+			var commentid int
 			var uid string
-			var parent_Id int
+			var parentid int
 			var content string
 			var date string
 			var idTopic int
 			var postid int
 			var image string
-			err := rows.Scan(&comment_id, &uid, &parent_Id, &content, &date, &idTopic, &postid, &image)
+			err := rows.Scan(&commentid, &uid, &parentid, &content, &date, &idTopic, &postid, &image)
 			if err != nil {
 				panic(err)
 			}
 
-			Cextra.Uid = uid
-			Cextra.Name = user.Pseudo
-			Cextra.Parent_Id = parent_Id
-			Cextra.Comment_Id = comment_id
-			Cextra.Content = content
-			Cextra.Date = date
-			Cextra.IdTopic = idTopic
-			Cextra.Post_id = postid
-			Cextra.Image = image
-			nbpost++
-
-
-			//on cherche le comme enfant//
-			defer db.Close()
-			rows, err := db.Query("SELECT Comment_id, Uid, Parent_Id, Content, Date, IdTopic, Post_Id, Image FROM com WHERE Parent_Id = ?", comment_id)
-			if err != nil {
-				panic(err)
-			}
-			defer rows.Close()
-			for rows.Next() {
-				var comment_id int
-				var uid string
-				var parent_Id int
-				var content string
-				var date string
-				var idTopic int
-				var postid int
-				var image string
-				err := rows.Scan(&comment_id, &uid, &parent_Id, &content, &date, &idTopic, &postid, &image)
-				if err != nil {
-					panic(err)
-				}
-
+			if parentid == 0 {
 				Cextra.Uid = uid
-				Cextra.Name = user.Pseudo
-				Cextra.Parent_Id = parent_Id
-				Cextra.Comment_Id = comment_id
+				Cextra.Parentid = parentid
+				Cextra.Commentid = commentid
 				Cextra.Content = content
 				Cextra.Date = date
 				Cextra.IdTopic = idTopic
-				Cextra.Post_id = postid
+				Cextra.Postid = postid
 				Cextra.Image = image
 				nbpost++
+				Cextra2 := RecursiveCom(commentid, user, nbpost)
 				TPextra.Answers = append(TPextra.Answers, Cextra)
+				for _, j := range Cextra2 {
+					TPextra.Answers = append(TPextra.Answers, j)
+				}
 			}
 		}
 
-		rows, err = models.DB.Query("SELECT id, name, post, date, idtopic, image, likes FROM post WHERE id = ?", Cextra.Post_id)
+		rows, err = models.DB.Query("SELECT id, name, post, date, idtopic, image, likes FROM post WHERE id = ?", Cextra.Postid)
 		if err != nil {
 			panic(err)
 		}
@@ -128,7 +101,6 @@ func AnswerHandler(w http.ResponseWriter, r *http.Request) {
 			TPextra.Likes = models.GetNbLikesPost(id)
 			TPextra.Post = post
 		}
-
 
 		if uid != "" {
 			if Answer != "" || image != "" {
@@ -156,4 +128,51 @@ func AnswerHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+}
+
+func RecursiveCom(i int, user models.User, nbpost int) []models.APost {
+	var Cextrachild []models.APost
+	var Cextra models.APost
+	var Cextra2 []models.APost
+	db, err := sql.Open("sqlite3", "DataBase.db")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	rows, err := db.Query("SELECT commentid, uid, parentid, content, date, idtopic, postid, image FROM com WHERE parentid= ?", i)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+
+		var commentid int
+		var uid string
+		var parentid int
+		var content string
+		var date string
+		var idTopic int
+		var postid int
+		var image string
+		err = rows.Scan(&commentid, &uid, &parentid, &content, &date, &idTopic, &postid, &image)
+		if err != nil {
+			panic(err)
+		}
+
+		Cextra.Uid = uid
+		Cextra.Name = user.Pseudo
+		Cextra.Parentid = parentid
+		Cextra.Commentid = commentid
+		Cextra.Content = content
+		Cextra.Date = date
+		Cextra.IdTopic = idTopic
+		Cextra.Postid = postid
+		Cextra.Image = image
+		nbpost++
+		Cextra2 = append(Cextra2, Cextra)
+		Cextrachild = RecursiveCom(commentid, user, nbpost)
+		Cextra2 = append(Cextra2, Cextrachild...)
+
+	}
+	return Cextra2
 }

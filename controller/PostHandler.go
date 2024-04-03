@@ -17,7 +17,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	var TPextra models.TPost
 	nbpost := 0
 	connected := true
-	var parent_id int
+	var parentid int
 	id_page, _ := strconv.Atoi(strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1])
 
 	Answer := r.FormValue("Answer")
@@ -63,6 +63,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			TPextra.Pdp = models.GetUser(name).Image
 
 			TPextra.IsLiked = models.IsLiked(user.Uid, id)
+			println("id : ", TPextra.IsLiked)
 
 		}
 
@@ -70,7 +71,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			if Answer != "" || image != "" {
 				Cextra.Content = Answer
 				Cextra.Image = image
-				models.AddCom(name, parent_id, Cextra.Content, formattedTime, TPextra.IdTopic, TPextra.Id, Cextra.Image)
+				models.AddCom(name, parentid, Cextra.Content, formattedTime, TPextra.IdTopic, TPextra.Id, Cextra.Image)
 				http.Redirect(w, r, "/forum/topic/post/"+strconv.Itoa(id_page), http.StatusSeeOther)
 				return
 			}
@@ -84,38 +85,42 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		defer db.Close()
-		rows, err = db.Query("SELECT Comment_id, Uid, Parent_Id, Content, Date, IdTopic, Post_Id, Image FROM com WHERE Post_id = ?", id_page)
+		rows, err = db.Query("SELECT commentid, uid, parentid, content, date, idtopic, postid, image FROM com WHERE postid = ?", id_page)
 		if err != nil {
 			panic(err)
 		}
 		defer rows.Close()
 		for rows.Next() {
-			var comment_id int
+			var commentid int
 			var uid string
-			var parent_Id int
+			var parentid int
 			var content string
 			var date string
 			var idTopic int
 			var postid int
 			var image string
-			err := rows.Scan(&comment_id, &uid, &parent_Id, &content, &date, &idTopic, &postid, &image)
+			err := rows.Scan(&commentid, &uid, &parentid, &content, &date, &idTopic, &postid, &image)
 			if err != nil {
 				panic(err)
 			}
 
-			Cextra.Uid = uid
-			Cextra.Parent_Id = parent_Id
-			Cextra.Comment_Id = comment_id
-			Cextra.Content = content
-			Cextra.Date = date
-			Cextra.IdTopic = idTopic
-			Cextra.Post_id = postid
-			Cextra.Image = image
-			nbpost++
-			TPextra.Answers = append(TPextra.Answers, Cextra)
+			if parentid == 0 {
+				Cextra.Uid = uid
+				Cextra.Parentid = parentid
+				Cextra.Commentid = commentid
+				Cextra.Content = content
+				Cextra.Date = date
+				Cextra.IdTopic = idTopic
+				Cextra.Postid = postid
+				Cextra.Image = image
+				nbpost++
+				Cextra2 := RecursiveCom(commentid, user, nbpost)
+				TPextra.Answers = append(TPextra.Answers, Cextra)
+				for _, j := range Cextra2 {
+					TPextra.Answers = append(TPextra.Answers, j)
+				}
+			}
 		}
-
-		TPextra.Answers = append(TPextra.Answers, Cextra)
 
 		//requete http
 
@@ -157,8 +162,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		//requqte http
-
 		lapage := models.Post_page{
 			User:    user,
 			Connect: connected,
@@ -166,7 +169,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			Nbpage:  id_page,
 		}
 
-		tmpl, err := template.ParseFiles("./view/qforum.html")
+		tmpl, err := template.ParseFiles("./view/post.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

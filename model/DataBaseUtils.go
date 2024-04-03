@@ -15,7 +15,7 @@ func OpenDateBase() {
 }
 
 func DeleteDB() {
-	_, err := DB.Exec("DELETE FROM  ") //le nom de la table a la place de completer
+	_, err := DB.Exec("DELETE FROM  ") //le nom de la table a delete
 	if err != nil {
 		fmt.Println("Erreur lors de l'exécution de la requête DELETE:", err)
 		return
@@ -149,14 +149,13 @@ func CreateDBPost() {
 func CreateDBCom() {
 	_, err := DB.Exec(`
 	CREATE TABLE IF NOT EXISTS Com (
-	    Comment_Id INTEGER PRIMARY KEY,
+	    CommentId INTEGER PRIMARY KEY,
 		Uid TEXT,
-		Parent_Id INTEGER,
-		Name TEXT,
+		ParentId INTEGER,
 		Content TEXT,
 		DATE TEXT,
 		IdTopic INTEGER,
-		Post_Id,
+		PostId,
 	    Image TEXT
 	)
 	`)
@@ -178,13 +177,13 @@ func CreateDBTags() {
 	}
 }
 
-func CreateDBLikes(){
-	_,err := DB.Exec(`
+func CreateDBLikes() {
+	_, err := DB.Exec(`
 	CREATE TABLE IF NOT EXISTS Likes(
-		Id INTEGER PRIMARY KEY,
-		Uid TEXT,
-		IdPost INTEGER,
-		IdComment INTEGER
+			Id INTEGER PRIMARY KEY,
+			Uid TEXT,
+			IdPost INTEGER,
+			IdComment INTEGER
 	)
 	`)
 	if err != nil {
@@ -192,8 +191,8 @@ func CreateDBLikes(){
 	}
 }
 
-func CreateDbAbo(){
-	_,err := DB.Exec(`
+func CreateDbAbo() {
+	_, err := DB.Exec(`
 	CREATE TABLE IF NOT EXISTS Abo(
 		Id INTEGER PRIMARY KEY,
 		Uid TEXT,
